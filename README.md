@@ -88,10 +88,11 @@ kubectl -f deployment/pages-config.yaml
 kubectl -f deployment/pages-service.yaml
 kubectl -f deployment/pages-deployment.yaml
 ```
-- Verify the deployment and service are created by using the following command
+- Verify the deployment, configMap and service are created by using the following command
 ```shell script
 kubectl get deployment pages
 kubectl get service pages
+kubectl get cm pages-config-map
 ```
 - Identify the external ip of the **pages** service
 - Open the pages url in http://<external-ip>:\<nodePort> to test the application

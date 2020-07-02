@@ -19,8 +19,7 @@ spec:
         servicefor: pages
     spec:
       containers:
-      - image: adityapratapbhuyan/pages:hello
-        imagePullPolicy: Always
+      - image: adityapratapbhuyan/pages:config
         name: pages
         ports:
           - containerPort: 8080
