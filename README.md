@@ -1,64 +1,46 @@
-- Create a settings.gradle file in the root project directory with below content
-```groovy
-rootProject.name = 'pages'
-```
-- We need to create PageApplication.java and HelloController.java based on test classes
-- Create a package **org.dell.kube.pages**  under *src/main/java*
-- Create class PageApplication.java in the package with below content
-```java
-package org.dell.kube.pages;
+# Follow Instructions to dockerize and Kubernetize the Pages Application
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-@SpringBootApplication
-public class PageApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(PageApplication.class, args);
-	}
-}
-```
-- Create HomeController.java with below content in same package
-```java
-package org.dell.kube.pages;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequestMapping("/")
-public class HomeController {
-
-
-    @GetMapping
-    public String getPage(){
-        return "Hello from page : YellowPages";
-    }
-
-
-}
-```
-- Add **actuator** dependency to the list of dependencies in build.gradle inside the dependencies closure
-```groovy
-implementation 'org.springframework.boot:spring-boot-starter-actuator'
-```
-- Create application.properties files under *resources* folder under *src/test* and *src/main* folder. Mark both the resources folderes as test resources root and resources root respectively.
-- Add the below content in both the properties files
-```properties
-spring.application.name=pages
-management.endpoints.web.exposure.include=*
-management.endpoint.health.show-details=always
-```
-- use the below command to clean,test and build the application
+## Dockerization
+- Build the application using gradle
+- Add the following lines in Dockerfile
 ```shell script
-./gradlew clean build
+  FROM adoptopenjdk:11-jre-openj9
+  ARG JAR_FILE=build/libs/*.jar
+  COPY ${JAR_FILE} app.jar
+  ENTRYPOINT ["java","-jar","/app.jar"]
 ```
-- use the below command to start the application
+- run the following commands to generate the Docker image
 ```shell script
-./gradlew bootRun
+docker build -t <docker_username>/<docker_repo>:<tag> .
+``` 
+- run the following command to run the image
+```shell script
+docker run -p 8080:8080 -t <docker_username>/<docker_repo>:<tag>
 ```
-- open the http://localhost:8080 in the browser to test the application
+Then open the application at http://localhost:8080 to test it.
+
+- Push the image to docker
+```shell script
+docker push <docker_username>/<docker_repo>:<tag>
+```
+
+### Running the image in Kubernetes
+- Fill the pages-services.yaml
+  * Assign **8080** to *targetPort* and *port*
+  * Assign **TCP** to *protocol*
+  * Assign the value **pages** to *app*, *servicefor* and *name*
+- Fill the pages-deployment.yaml
+  * Assign the value **pages** to *app*, *servicefor* and *name* 
+  * Assign <docker_username>/<docker_repo>:\<tag> for image
+- Run the following commands in kubernetes to run the application 
+```shell script
+kubectl -f deployment/pages-service.yaml
+kubectl -f deployment/pages-deployment.yaml
+```
+- Verify the deployment and service are created by using the following command
+```shell script
+kubectl get deployment pages
+kubectl get service pages
+```
+- Identify the external ip of the **pages** service
+- Open the pages url in http://<external-ip>:\<nodePort> to test the application
