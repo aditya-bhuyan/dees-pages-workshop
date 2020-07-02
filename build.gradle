@@ -10,7 +10,13 @@ sourceCompatibility = '11'
 repositories {
 	mavenCentral()
 }
+bootRun.environment([
+		"PAGE_CONTENT": "YellowPages",
+])
 
+test.environment([
+		"PAGE_CONTENT": "YellowPages",
+])
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'

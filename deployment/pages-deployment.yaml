@@ -23,5 +23,11 @@ spec:
         name: pages
         ports:
           - containerPort: 8080
+        env:
+          - name: PAGE_CONTENT
+            valueFrom:
+              configMapKeyRef:
+                name: pages-config-map
+                key: PAGE_CONTENT
         resources: {}
 status: {}
