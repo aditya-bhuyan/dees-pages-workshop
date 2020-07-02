@@ -205,3 +205,15 @@ spring.application.name=pages
 management.endpoints.web.exposure.include=*
 management.endpoint.health.show-details=always
 ```
+- use the below command to clean,test and build the application
+```shell script
+./gradlew clean build
+```
+- use the below command to start the application
+```shell script
+./gradlew bootRun
+```
+- open the http://localhost:8080 in the browser to test the application
+-------------------
+TDD Solution for Hello Ends
+-------------------
