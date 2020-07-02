@@ -2,23 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app:
-    servicefor:
-  name:
+    app: pages
+    servicefor: pages
+  name: pages
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app:
-      servicefor:
+      app: pages
+      servicefor: pages
+  strategy: {}
   template:
     metadata:
       labels:
-        app:
-        servicefor:
+        app: pages
+        servicefor: pages
     spec:
       containers:
-      - image:
-        name:
+      - image: adityapratapbhuyan/pages:hello
+        imagePullPolicy: Always
+        name: pages
         ports:
           - containerPort: 8080
+        resources: {}
+status: {}
