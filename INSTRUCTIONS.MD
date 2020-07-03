@@ -797,6 +797,27 @@ public class InMemoryPageRepository implements IPageRepository{
 }
 ```
 - Create a bean called  **pageRepository** in PageApplication.java which returns an implementation of *IPageRepository*
+```java
+package org.dell.kube.pages;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class PageApplication {
+
+	
+	public static void main(String[] args) {
+		SpringApplication.run(PageApplication.class, args);
+	}
+
+	@Bean
+	public IPageRepository iPageRepository(){
+		return new InMemoryPageRepository();
+	}
+}
+```
 - Create a PageController.java in src folder. Create an Instance of IPageRepository and intialiase it with a constructor injection
 ```java
 package org.dell.kube.pages;

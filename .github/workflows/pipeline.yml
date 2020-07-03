@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: adityapratapbhuyan/pages
-          tags: logging
+          tags: repo
   deploy-image-to-pks:
     needs: build-artifact
     runs-on: ubuntu-latest
