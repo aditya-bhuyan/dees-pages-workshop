@@ -395,23 +395,23 @@ jobs:
   build-artifact:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Build with Gradle
-      run: |
-        ./gradlew clean build
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: artifact
-        path: build/libs/pages.jar
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: build/libs/pages.jar
 
-    - name: build-docker-image
-      uses: docker/build-push-action@v1
-      with:
+      - name: build-docker-image
+        uses: docker/build-push-action@v1
+        with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: <docker-user-name>/pages
@@ -454,7 +454,7 @@ jobs:
     #5 - Set the kubectl context to target pks cluster
     #6 - Create ConfigMap/Secrets
     #7 - Create Service
-    #8 - Create Deployment 
+    #8-  Create Deployment 
 ```
 - Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
 - Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
