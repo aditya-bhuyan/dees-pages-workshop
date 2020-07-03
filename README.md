@@ -5,6 +5,19 @@ As part of the *persistence-start* a new Test class is added to the code base. G
 implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 implementation 'mysql:mysql-connector-java:8.0.12'
 ```
+- Add the following line in test.environment closure of build.gradle
+```groovy
+test.environment([
+		"PAGE_CONTENT": "YellowPages",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
+])
+```
+- Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle
+```groovy
+testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}*/
+```
 - Add jdbc related properties in application.properties for both **main** and **test** folders
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false
