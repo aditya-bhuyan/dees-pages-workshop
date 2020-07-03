@@ -18,16 +18,33 @@ spec:
         app: pages
         servicefor: pages
     spec:
+      volumes:
+      - name: log-volume
+        persistentVolumeClaim:
+          claimName: log-persistent-claim
       containers:
-      - image: adityapratapbhuyan/pages:config
+      - image: adityapratapbhuyan/pages:logging
+        imagePullPolicy: Always
         name: pages
         ports:
           - containerPort: 8080
         env:
-          - name: PAGE_CONTENT
-            valueFrom:
+        - name: PAGE_CONTENT
+          valueFrom:
               configMapKeyRef:
                 name: pages-config-map
                 key: PAGE_CONTENT
+        volumeMounts:
+        - name: log-volume
+          mountPath: "/var/tmp/"
+        readinessProbe:
+          tcpSocket:
+           port: 8080
+          initialDelaySeconds: 150
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 150
         resources: {}
 status: {}
