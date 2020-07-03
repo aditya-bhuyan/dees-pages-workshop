@@ -185,6 +185,7 @@ kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
+- Change the value of **tags** in *pipeline.yaml* to *logging* 
 - Put below instructions in pipeline.yaml  to create pv and pvc, just above the statement "kubectl apply -f deployment/pages-config.yaml"
 ```yaml
 kubectl apply -f deployment/log-pv.yaml
