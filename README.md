@@ -28,27 +28,21 @@ jobs:
     - name: Build with Gradle
       run: |
         ./gradlew clean build
-    - uses: actions/upload-artifact@v2
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: artifact
         path: build/libs/pages.jar
 
-  build-docker-image:
-    needs: build-artifact
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: artifact
-      - uses: docker/build-push-action@v1
-        with:
+    - name: build-docker-image
+      uses: docker/build-push-action@v1
+      with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: <docker-user-name>/pages
           tags: <tag-name>
   deploy-image-to-pks:
-    needs: build-docker-image
+    needs: build-artifact
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -59,6 +53,7 @@ jobs:
           pivnet login --api-token=cd8d86d24afa43b9bd989012adcbf3f5-r
           pivnet download-product-files --product-slug='pivotal-container-service' --release-version='1.7.0' --product-file-id=646536
           sudo mv pks-linux-amd64-1.7.0-build.483 pks
+          chmod +x pks
           sudo mv pks /usr/local/bin/
       - name: Install Kubectl
         run: |
@@ -84,7 +79,7 @@ jobs:
     #5 - Set the kubectl context to target pks cluster
     #6 - Create ConfigMap/Secrets
     #7 - Create Service
-    #8-  Create Deployment
+    #8 - Create Deployment
 ```
 - Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
 - Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
