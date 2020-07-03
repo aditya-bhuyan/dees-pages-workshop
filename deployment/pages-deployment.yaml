@@ -23,7 +23,7 @@ spec:
         persistentVolumeClaim:
           claimName: log-persistent-claim
       containers:
-      - image: adityapratapbhuyan/pages:repo
+      - image: adityapratapbhuyan/pages:persist
         imagePullPolicy: Always
         name: pages
         ports:
