@@ -1,196 +1,188 @@
-## Instructions for the logging and monitoring
-
-### Creating and Updating the log-pv.yaml and log-pvc.yaml
-- Create two files **log-pv.yaml** and **log-pvc.yaml** under deployment directory
-- For log-pv.yaml fill all the sections
-  * Assign name as log-persistent-volume under metadata section
-  * Assign volumeMode to FileSystem under spec
-  * Assign storageClassName to slow under spec
-  * Capacity storage would be 500Mi
-  * accessModes would be ReadWriteOnce
-  * hostPath would be "/mnt/logs"
-```yaml
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: log-persistent-volume
-  labels:
-    type: local
-spec:
-  volumeMode: Filesystem
-  storageClassName: manual
-  capacity:
-    storage: 500Mi
-  accessModes:
-  - ReadWriteMany
-  hostPath:
-    path: "/mnt/logs"
-```
-- For log-pvc.yaml fill all the sections
-  * name would be log-persistent-claim
-  * volumeMode would be  FileSystem under spec
-  * storageClassName would be slow under spec
-  * resources/requests/storage would be 500Mi
-  * accessModes would be ReadWriteOnce
- ```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: log-persistent-claim
-spec:
-  volumeMode: Filesystem
-  storageClassName: manual
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 500Mi
-```
-- Add below properties in application.properties in both test and source
-```properties
-logging.file.name=/var/tmp/pages-app.log
-debug=true
-logging.level.org.springframework.web=debug
-logging.level.root=debug
-```
-- Code change in HomeController
-  * Add a Logger from slf4j api
-  * Add  debug,warn,trace,info and error messages in getPage() method
+## Instructions to Reach Inmemory Solution
+As part of the *inmemory-start* checkout 2 Test classes would be added to the codebase. On build the application would fail as there is no code to support the test cases. Follow the below instructions to reach solution.
+- Create new File Pages.java in src
 ```java
 package org.dell.kube.pages;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+public class Page {
 
-@RestController
-@RequestMapping("/")
-public class HomeController {
-    Logger logger = LoggerFactory.getLogger(HomeController.class);
-    private String pageContent;
+    private Long id;
+    private String businessName;
+    private Long categoryId;
+    private String address;
+    private String contactNumber;
 
-    public HomeController(@Value("${page.content}") String pageContent){
-        this.pageContent=pageContent;
+    public Page(){}
 
-    }
-    @GetMapping
-    public String getPage(){
-        logger.debug("Welcome Page Accessed");
-        logger.info("Welcome Page Accessed");
-        logger.trace("Welcome Page Accessed");
-        logger.warn("Welcome Page Accessed");
-        logger.error("Welcome Page Accessed");
-        return "Hello from page : "+pageContent+" ";
+    public Page(String businessName, String address, long categoryId, String contactNumber) {
+        this.businessName = businessName;
+        this.address = address;
+        this.categoryId = categoryId;
+        this.contactNumber = contactNumber;
     }
 
+    public Page(long id, String businessName, String address, long categoryId, String contactNumber) {
+        this.id = id;
+        this.businessName = businessName;
+        this.address = address;
+        this.categoryId = categoryId;
+        this.contactNumber = contactNumber;
+    }
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
 }
 ```
-- Few logging properties are added in application.properties files of test and source in above step. Run your application and verify the logs
-- Comment the log properties from application.properties  of both test and source.
-- Add logback.xml under resources folders of both test and source with basic logging configuration for FILE and STDOUT appender
-```xml
-  <?xml version = "1.0" encoding = "UTF-8"?>
-  <configuration>
-      <include resource="org/springframework/boot/logging/logback/base.xml"/>
-      <logger name="org.springframework.web" level="DEBUG"/>
-      <appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
-          <encoder>
-              <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.sss'Z'}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
-          </encoder>
-      </appender>
-  
-      <appender name = "FILE" class = "ch.qos.logback.core.FileAppender">
-          <File>/var/tmp/pages-app.log</File>
-          <encoder>
-              <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.sss'Z'}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
-          </encoder>
-      </appender>
-  
-      <root level = "DEBUG">
-          <appender-ref ref = "FILE"/>
-          <appender-ref ref = "STDOUT"/>
-      </root>
-  </configuration>
+- Create new IPageRepository.java in src folder
+```java
+package org.dell.kube.pages;
+
+import java.util.List;
+
+public interface IPageRepository {
+    public Page create(Page page);
+    public Page read(long id);
+    public List<Page> list();
+    public Page update(Page page, long id);
+    public void delete(long id);
+}
 ```
-- Add log volume details in pages-deployment.yaml
-  
-- Add liveness and readiness probe information in pages-deployment.yaml
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: pages
-    servicefor: pages
-  name: pages
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: pages
-      servicefor: pages
-  strategy: {}
-  template:
-    metadata:
-      labels:
-        app: pages
-        servicefor: pages
-    spec:
-      volumes:
-      - name: log-volume
-        persistentVolumeClaim:
-          claimName: log-persistent-claim
-      containers:
-      - image: adityapratapbhuyan/pages:logging
-        imagePullPolicy: Always
-        name: pages
-        ports:
-          - containerPort: 8080
-        env:
-        - name: PAGE_CONTENT
-          valueFrom:
-              configMapKeyRef:
-                name: pages-config-map
-                key: PAGE_CONTENT
-        volumeMounts:
-        - name: log-volume
-          mountPath: "/var/tmp/"
-        readinessProbe:
-          tcpSocket:
-           port: 8080
-          initialDelaySeconds: 150
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          initialDelaySeconds: 150
-        resources: {}
-status: {}
+- Create new InMemoryPageRepository which implements IPageRepository
+```java
+package org.dell.kube.pages;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class InMemoryPageRepository implements IPageRepository{
+    Map<Long,Page> repo = new HashMap<Long,Page>();
+    long counter;
+
+    @Override
+    public Page create(Page page) {
+        page.setId(++counter);
+        repo.put(page.getId(),page);
+        return repo.get(page.getId());
+    }
+
+    @Override
+    public Page read(long id) {
+        return repo.get(id);
+    }
+
+    @Override
+    public List<Page> list() {
+        return new ArrayList<Page>(repo.values());
+    }
+
+    @Override
+    public Page update(Page page, long id) {
+        Page data = repo.get(id);
+        if(data != null){
+            page.setId(id);
+            repo.put(page.getId(),page);
+            data = page;
+        }
+        return data;
+    }
+
+    @Override
+    public void delete(long id) {
+       repo.remove(id);
+    }
+}
 ```
-- Build the application with 
-```sh
-./gradlew clean build
+- Create a bean called  **pageRepository** in PageApplication.java which returns an implementation of *IPageRepository*
+- Create a PageController.java in src folder. Create an Instance of IPageRepository and intialiase it with a constructor injection
+```java
+package org.dell.kube.pages;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/pages")
+public class PageController {
+
+    private IPageRepository pageRepository;
+    public PageController(IPageRepository pageRepository)
+    {
+        this.pageRepository = pageRepository;
+    }
+    @PostMapping
+    public ResponseEntity<Page> create(@RequestBody Page page) {
+        Page newPage= pageRepository.create(page);
+        return new ResponseEntity<Page>(newPage, HttpStatus.CREATED);
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<Page> read(@PathVariable long id) {
+        Page page = pageRepository.read(id);
+        if(page!=null)
+            return new ResponseEntity<Page>(page,HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping
+    public ResponseEntity<List<Page>> list() {
+        List<Page> pages= pageRepository.list();
+        return new ResponseEntity<List<Page>>(pages,HttpStatus.OK);
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<Page> update(@RequestBody Page page, @PathVariable long id) {
+        Page updatedPage= pageRepository.update(page,id);
+        if(updatedPage!=null)
+            return new ResponseEntity<Page>(updatedPage,HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable long id) {
+        pageRepository.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+}
 ```
-- Docker build and push the application with tag **logging**
-- Change the tag to *logging* in pages-deployment.yaml
-- Use the following commands to deploy the application in kubernetes
-```shell script
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
-kubectl apply -f deployment/pages-config.yaml
-kubectl apply -f deployment/pages-service.yaml
-kubectl apply -f deployment/pages-deployment.yaml
-```
-- Change the value of **tags** in *pipeline.yaml* to *logging* 
-- Put below instructions in pipeline.yaml  to create pv and pvc, just above the statement "kubectl apply -f deployment/pages-config.yaml"
-```yaml
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
-```
-- The application would be ready after 150 seconds as the readiness probe would start after 150 seconds
-- Keep on checking the status of the pod which is part of the pages deployment
-- After sometime though the status might be **Running**, it might be showing **Not Ready**
+- Run the application and test by making CRUD operations using any CRUD tool like ARC, POSTMAN or CURL.
+- Build and Publish the docker image tag as **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
+- Check in the code to start github actions to deploy in Cluster
