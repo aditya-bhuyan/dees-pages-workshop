@@ -20,35 +20,29 @@ jobs:
   build-artifact:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Build with Gradle
-      run: |
-        ./gradlew clean build
-    - uses: actions/upload-artifact@v2
-      with:
-        name: artifact
-        path: build/libs/pages.jar
-
-  build-docker-image:
-    needs: build-artifact
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
         with:
           name: artifact
-      - uses: docker/build-push-action@v1
+          path: build/libs/pages.jar
+
+      - name: build-docker-image
+        uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: <docker-user-name>/pages
-          tags: <tag-name>
+          repository: adityapratapbhuyan/pages
+          tags: repo
   deploy-image-to-pks:
-    needs: build-docker-image
+    needs: build-artifact
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -59,6 +53,7 @@ jobs:
           pivnet login --api-token=cd8d86d24afa43b9bd989012adcbf3f5-r
           pivnet download-product-files --product-slug='pivotal-container-service' --release-version='1.7.0' --product-file-id=646536
           sudo mv pks-linux-amd64-1.7.0-build.483 pks
+          chmod +x pks
           sudo mv pks /usr/local/bin/
       - name: Install Kubectl
         run: |
