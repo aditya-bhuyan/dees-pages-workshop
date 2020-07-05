@@ -68,7 +68,7 @@ out/
 ### VS Code ###
 .vscode/
 ```
-- Open the project in Intellij Idea, select the import gradle project option in buttom right corner and  set project SDK to JDK 11
+- Open the project in Intellij Idea, select the import gradle project option in bottom right corner and  set project SDK to JDK 11
 - Create two folders **src/main/java** and **src/test/java** under project root directory. Mark them as sources root and test root respectively.
 - Create two packages **org.dell.kube.pages** and **org.dell.kube.pagesapi** under *src/test/java*
 - Create a Test class called **PagesApplicationTests.java** under package **org.dell.kube.pages** with below content
