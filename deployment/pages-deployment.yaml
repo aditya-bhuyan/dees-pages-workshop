@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app:
+    servicefor:
+  name:
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:
+      servicefor:
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app:
+        servicefor:
+    spec:
+      containers:
+      - image:
+        imagePullPolicy: Always
+        name:
+        ports:
+          - containerPort: 8080
+        resources: {}
+status: {}
