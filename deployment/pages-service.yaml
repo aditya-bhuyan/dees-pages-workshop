@@ -5,6 +5,7 @@ metadata:
     app:
     servicefor:
   name:
+  namespace:
 spec:
   ports:
   - port:
@@ -13,6 +14,6 @@ spec:
   selector:
     app:
     servicefor:
-  type: NodePort
+  type: LoadBalancer
 status:
   loadBalancer: {}

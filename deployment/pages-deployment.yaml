@@ -5,6 +5,7 @@ metadata:
     app:
     servicefor:
   name:
+  namespace:
 spec:
   replicas: 1
   selector:
