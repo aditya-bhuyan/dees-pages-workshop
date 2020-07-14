@@ -14,6 +14,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: log-persistent-volume
+  namespace: pages-<your-name>
   labels:
     type: local
 spec:
@@ -37,6 +38,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: log-persistent-claim
+  namespace: pages-<your-name>
 spec:
   volumeMode: Filesystem
   storageClassName: manual
@@ -127,6 +129,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
+  namespace: pages-<your-name>
 spec:
   replicas: 1
   selector:
@@ -181,6 +184,7 @@ status: {}
 ```shell script
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
+kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
