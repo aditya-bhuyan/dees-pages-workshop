@@ -5,6 +5,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
+  namespace: pages-deployment
 spec:
   replicas: 1
   selector:
@@ -23,7 +24,7 @@ spec:
         persistentVolumeClaim:
           claimName: log-persistent-claim
       containers:
-      - image: adityapratapbhuyan/pages:repo
+      - image: adityapratapbhuyan/pages:persist
         imagePullPolicy: Always
         name: pages
         ports:
