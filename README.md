@@ -1,6 +1,8 @@
 # Follow Instructions to  Kubernetize the Pages Application
 
 ### Running the image in Kubernetes
+- Fill the pages-namespace.yaml
+  * Assign *pages-<your-first-name>* to **name**
 - Fill the pages-services.yaml
   * Assign **8080** to *targetPort* and *port*
   * Assign **TCP** to *protocol*
