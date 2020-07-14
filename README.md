@@ -9,7 +9,7 @@ implementation 'mysql:mysql-connector-java:8.0.12'
 ```groovy
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
-		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root",
 ])
 ```
 - Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle
@@ -20,7 +20,7 @@ testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
 ```
 - Add jdbc related properties in application.properties for both **main** and **test** folders
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false
+spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
 spring.datasource.username=root
 spring.datasource.password=
 ```
@@ -227,7 +227,7 @@ spec:
   selector:
     app: mysql
   clusterIP: None
-#kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword
+#kubectl run -it --rm --image=mysql:8.0 --restart=Never mysql-client -- mysql -h mysql -ppassword
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
@@ -240,7 +240,7 @@ spec:
 ```
 - Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the following values in the application.properties in src/main folder
 ```properties
-spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&useSSL=false&user=root
+spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
 ```
 
