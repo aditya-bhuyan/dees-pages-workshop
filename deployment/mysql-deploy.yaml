@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  namespace: pages-deployment
 spec:
   replicas: 1
   selector:

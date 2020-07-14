@@ -141,6 +141,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mysql-volume
+  namespace: pages-<your-name>
   labels:
     type: local
 spec:
@@ -156,6 +157,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-volume-claim
+  namespace: pages-<your-name>
 spec:
   storageClassName: manual
   accessModes:
@@ -172,6 +174,7 @@ data:
 kind: Secret
 metadata:
   name: mysql-secret
+  namespace: pages-<your-name>
 ```
 - Create a new file called mysql-deployment.yaml in deployment folder
 ```yaml
@@ -179,6 +182,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
+  namespace: pages-<your-name>
 spec:
   replicas: 1
   selector:
@@ -216,6 +220,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
+  namespace: pages-<your-name>
 spec:
   ports:
     - port: 3306
@@ -249,6 +254,7 @@ spring.datasource.password=password
 - In the pipeline.yaml add "./gradlew clean build -x test" instead of "./gradlew clean build"
 - Change the pipeline.yaml to use the new mysql related yaml files. The last section should look like below
 ```yaml
+kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
 kubectl apply -f deployment/mysql-pv.yaml
@@ -258,4 +264,5 @@ kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
-- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster
+- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
+- After that verify the external-ip of the services and open the service as http://external-ip:8080 
