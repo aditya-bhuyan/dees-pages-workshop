@@ -5,6 +5,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
+  namespace: pages-deployment
 spec:
   replicas: 1
   selector:
