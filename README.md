@@ -69,7 +69,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pages-config-map
-  namespace: pages-deployment
+  namespace: pages-<your-name>
 data:
   PAGE_CONTENT: "Green-Pages coming from Yellow-world!"
 ```

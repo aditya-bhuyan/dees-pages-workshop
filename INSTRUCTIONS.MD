@@ -341,7 +341,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pages-config-map
-  namespace: pages-deployment
+  namespace: pages-<your-name>
 data:
   PAGE_CONTENT: "Green-Pages coming from Yellow-world!"
 ```
@@ -369,6 +369,7 @@ kubectl get cm pages-config-map  --namespace pages-<your-name>
 kubectl get service pages  --namespace pages-<your-name>
 ```
 - Identify the external ip of the **pages** service from the above command
-- Open the pages url in http://\<external-ip>:8080 to test the application-------------
+- Open the pages url in http://\<external-ip>:8080 to test the application
+-------------
 Configuration Ends
 ------------------
