@@ -182,15 +182,15 @@ status: {}
 - Change the tag to *logging* in pages-deployment.yaml
 - Use the following commands to deploy the application in kubernetes
 ```shell script
+kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
-kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
-- Put below instructions in pipeline.yaml  to create pv and pvc, just above the statement "kubectl apply -f deployment/pages-config.yaml"
+- Put below instructions in pipeline.yaml  to create pv and pvc, just below the statement "kubectl apply -f deployment/pages-namespace.yaml"
 ```yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
