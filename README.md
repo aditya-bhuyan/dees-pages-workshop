@@ -265,4 +265,4 @@ kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
-- After that verify the external-ip of the services and 
+- After that verify the external-ip of the service and access it in browser as http://external-ip:8080 
