@@ -9,7 +9,7 @@ implementation 'mysql:mysql-connector-java:8.0.12'
 ```groovy
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
-		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root",
 ])
 ```
 - Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle

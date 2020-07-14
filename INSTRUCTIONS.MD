@@ -1120,7 +1120,7 @@ spec:
 ```
 - Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the following values in the application.properties in src/main folder
 ```properties
-spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&useSSL=false&user=root
+spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
 ```
 

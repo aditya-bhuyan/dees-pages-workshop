@@ -47,6 +47,6 @@ spec:
   selector:
     app: mysql
   clusterIP: None
-#kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword
+#kubectl run -it --rm --image=mysql:8.0 --restart=Never mysql-client -- mysql -h mysql -ppassword
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
