@@ -14,6 +14,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: log-persistent-volume
+  namespace: pages-<your-name>
   labels:
     type: local
 spec:
@@ -37,6 +38,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: log-persistent-claim
+  namespace: pages-<your-name>
 spec:
   volumeMode: Filesystem
   storageClassName: manual
@@ -127,6 +129,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
+  namespace: pages-<your-name>
 spec:
   replicas: 1
   selector:
@@ -179,6 +182,7 @@ status: {}
 - Change the tag to *logging* in pages-deployment.yaml
 - Use the following commands to deploy the application in kubernetes
 ```shell script
+kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
 kubectl apply -f deployment/pages-config.yaml
@@ -186,7 +190,7 @@ kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
-- Put below instructions in pipeline.yaml  to create pv and pvc, just above the statement "kubectl apply -f deployment/pages-config.yaml"
+- Put below instructions in pipeline.yaml  to create pv and pvc, just below the statement "kubectl apply -f deployment/pages-namespace.yaml"
 ```yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
