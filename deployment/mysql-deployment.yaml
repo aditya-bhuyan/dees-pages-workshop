@@ -20,8 +20,8 @@ spec:
           name: mysql
           env:
             # Instead of using value directly we could also use secrets
-           - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-pass
@@ -40,6 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
+  namespace: pages-deployment
 spec:
   ports:
     - port: 3306

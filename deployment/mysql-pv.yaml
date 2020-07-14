@@ -18,6 +18,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-volume-claim
+  namespace: pages-deployment
 spec:
   storageClassName: manual
   accessModes:
