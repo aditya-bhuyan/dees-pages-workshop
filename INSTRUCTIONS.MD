@@ -213,17 +213,18 @@ management.endpoint.health.show-details=always
 ```shell script
 ./gradlew bootRun
 ```
-- open the http://localhost:8080 in the browser to test the application
+- open the application at http://localhost:8080 in the browser to test the application
 -------------------
 TDD Solution for Hello Ends
 -------------------
 Dockerization Starts
 -------------------
-# Follow Instructions to dockerize and Kubernetize the Pages Application
+# Follow Instructions to dockerize  the Pages Application
 
 ## Dockerization
+- Create an account in [docker](https://hub.docker.com/) if not there.
 - Build the application using gradle
-- Add the following lines in Dockerfile
+- Open the empty Dockerfile and add the following lines in the Dockerfile
 ```shell script
   FROM adoptopenjdk:11-jre-openj9
   ARG JAR_FILE=build/libs/*.jar
@@ -232,15 +233,18 @@ Dockerization Starts
 ```
 - run the following commands to generate the Docker image
 ```shell script
-docker build -t <docker_username>/<docker_repo>:<tag> .
+docker build -t \<docker_username>/pages:<tag> .
 ``` 
 - run the following command to run the image
 ```shell script
-docker run -p 8080:8080 -t <docker_username>/<docker_repo>:<tag>
+docker run  8080:8080  \<docker_username>/pages:<tag>
 ```
-Then open the application at http://localhost:8080 to test it.
+Then open the application in browser at http://localhost:8080 to test it.
 
 - Push the image to docker
 ```shell script
-docker push <docker_username>/<docker_repo>:<tag>
+docker push \<docker_username>/pages:<tag>
 ```
+----------------
+Dockerization Ends
+----------------
