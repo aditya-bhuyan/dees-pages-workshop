@@ -141,7 +141,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mysql-volume
-  namespace: pages-<your-name>
+  namespace: <your-name>
   labels:
     type: local
 spec:
@@ -157,7 +157,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-volume-claim
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   storageClassName: manual
   accessModes:
@@ -174,7 +174,7 @@ data:
 kind: Secret
 metadata:
   name: mysql-secret
-  namespace: pages-<your-name>
+  namespace: <your-name>
 ```
 - Create a new file called mysql-deployment.yaml in deployment folder
 ```yaml
@@ -182,7 +182,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   replicas: 1
   selector:
@@ -220,7 +220,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   ports:
     - port: 3306
@@ -231,7 +231,7 @@ spec:
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
-- Install a MySQL instance with no password for user root in local machine
+- Ensure that a MySQL instance with no password for user root in local machine is running
 - Build, Test and Run the application locally by using the following commands
 ```shell script
 ./gradlew clean
@@ -264,5 +264,5 @@ kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
-- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
-- After that verify the external-ip of the service and access it in browser as http://external-ip:8080 
+- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in pks cluster.
+- After that verify the url of the service and access it in browser
