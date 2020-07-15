@@ -402,6 +402,7 @@ jobs:
           java-version: 11
       - name: Build with Gradle
         run: |
+          chmod +x ./gradlew
           ./gradlew clean build
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -414,8 +415,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: adityapratapbhuyan/pages
-          tags: repo
+          repository: <docker-user-name>/pages
+          tags: <tag-name>
   deploy-image-to-pks:
     needs: build-artifact
     runs-on: ubuntu-latest
@@ -439,6 +440,7 @@ jobs:
         run: |
           pks login -a ${{ secrets.PKS_API }}  ${{ secrets.PKS_CLUSTER }} -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
           pks get-credentials pks-workshop
+          kubectl apply -f deployment/pages-namespace.yaml
           kubectl apply -f deployment/pages-config.yaml
           kubectl apply -f deployment/pages-service.yaml
           kubectl apply -f deployment/pages-deployment.yaml
@@ -457,7 +459,17 @@ jobs:
     #8-  Create Deployment
 ```
 - Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
+- Steps to create pivnet token as per your own account and put it in pipeline.yaml
+```text
+1. Create an account using the link https://account.run.pivotal.io/z/uaa/sign-up
+2. Check your inbox and verify email, so that you can sign in successfully.
+3. Access https://network.pivotal.io/users/dashboard/edit-profile
+4. Create an API token and copy it.
+5. Update the token in the pages/.github/workflows/pipeline.yaml file under the workflow deploy-image-to-pks section for the below line
+    pivnet login --api-token=<paste-your-token-here>
+```
 - Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
+- Verify your objects in pks cluster and access the service in browser as mentioned in the previous lab
 -------------
 Pipeline Ends
 -------------
