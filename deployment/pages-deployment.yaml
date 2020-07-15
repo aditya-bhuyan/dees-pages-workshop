@@ -5,7 +5,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
-  namespace: pages-deployment
+  namespace: aditya
 spec:
   replicas: 1
   selector:
@@ -20,7 +20,7 @@ spec:
         servicefor: pages
     spec:
       containers:
-      - image: adityapratapbhuyan/pages:hello
+      - image: adityapratapbhuyan/pages:kube
         imagePullPolicy: Always
         name: pages
         ports:
