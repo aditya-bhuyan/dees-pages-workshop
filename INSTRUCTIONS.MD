@@ -479,7 +479,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: log-persistent-volume
-  namespace: pages-<your-name>
+  namespace: <your-name>
   labels:
     type: local
 spec:
@@ -503,7 +503,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: log-persistent-claim
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   volumeMode: Filesystem
   storageClassName: manual
@@ -594,7 +594,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   replicas: 1
   selector:
@@ -660,7 +660,8 @@ kubectl apply -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/log-pv.yaml
 kubectl apply -f deployment/log-pvc.yaml
 ```
-- The application would be ready after 150 seconds as the readiness probe would start after 150 seconds
+- Push the code to github repository to start the pipeline
+- In PKS cluster the application ready time would be delayed.  The application would be ready after 150 seconds as the readiness probe would start after 150 seconds
 - Keep on checking the status of the pod which is part of the pages deployment
 - After sometime though the status might be **Running**, it might be showing **Not Ready**
 --------------

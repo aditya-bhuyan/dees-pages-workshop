@@ -15,6 +15,7 @@ jobs:
           java-version: 11
       - name: Build with Gradle
         run: |
+          chmod +x ./gradlew
           ./gradlew clean build
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -28,7 +29,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: adityapratapbhuyan/pages
-          tags: logging
+          tags: config
   deploy-image-to-pks:
     needs: build-artifact
     runs-on: ubuntu-latest
@@ -53,8 +54,6 @@ jobs:
           pks login -a ${{ secrets.PKS_API }}  ${{ secrets.PKS_CLUSTER }} -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
           pks get-credentials pks-workshop
           kubectl apply -f deployment/pages-namespace.yaml
-          kubectl apply -f deployment/log-pv.yaml
-          kubectl apply -f deployment/log-pvc.yaml
           kubectl apply -f deployment/pages-config.yaml
           kubectl apply -f deployment/pages-service.yaml
           kubectl apply -f deployment/pages-deployment.yaml
