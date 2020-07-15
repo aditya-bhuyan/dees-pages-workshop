@@ -61,4 +61,5 @@ management.endpoint.health.show-details=always
 ```shell script
 ./gradlew bootRun
 ```
-- open the http://localhost:8080 in the browser to test the application
+- Open the application @ http://localhost:8080 in the browser to test the application. Check the actuator end points @ http://localhost:8080/actuator
+- Push code to github repository

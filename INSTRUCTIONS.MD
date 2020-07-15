@@ -1,5 +1,5 @@
 ## Instruction to start the *Hello Application* from scratch
-- Download the project zip file and extract it inside workspace folder
+- Download the project zip file from [here](https://dell-edu-lab-store.s3.ap-south-1.amazonaws.com/repository/pages.zip) and extract it inside workspace folder
 - Create a repository in git with the name **pages**. Keep everything default, while creating the repository, don't change anything other than default.
 - Copy the *git remote add origin <repo address>*  and execute it in the directory 
 - Create a build.gradle file with following content
@@ -95,7 +95,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HomeControllerTest {
+public class HomeControllerTests {
     private final String message = "YellowPages";
 
     @Test
@@ -213,7 +213,8 @@ management.endpoint.health.show-details=always
 ```shell script
 ./gradlew bootRun
 ```
-- open the http://localhost:8080 in the browser to test the application
+- Open the application @ http://localhost:8080 in the browser to test the application. Check the actuator end points @ http://localhost:8080/actuator
+- Push code to github repository
 -------------------
 TDD Solution for Hello Ends
 -------------------
