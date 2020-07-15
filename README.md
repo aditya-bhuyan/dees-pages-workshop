@@ -9,7 +9,7 @@ implementation 'mysql:mysql-connector-java:8.0.12'
 ```groovy
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
-		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
 ])
 ```
 - Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle
@@ -141,7 +141,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mysql-volume
-  namespace: pages-<your-name>
+  namespace: <your-name>
   labels:
     type: local
 spec:
@@ -157,7 +157,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-volume-claim
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   storageClassName: manual
   accessModes:
@@ -174,7 +174,7 @@ data:
 kind: Secret
 metadata:
   name: mysql-secret
-  namespace: pages-<your-name>
+  namespace: <your-name>
 ```
 - Create a new file called mysql-deployment.yaml in deployment folder
 ```yaml
@@ -182,7 +182,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   replicas: 1
   selector:
@@ -220,18 +220,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: pages-<your-name>
+  namespace: <your-name>
 spec:
   ports:
     - port: 3306
   selector:
     app: mysql
   clusterIP: None
-#kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword
+#kubectl run -it --rm --image=mysql:8.0 --restart=Never mysql-client -- mysql -h mysql -ppassword
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
-- Install a MySQL instance with no password for user root in local machine
+- Ensure that a MySQL instance with no password for user root is running in local machine
 - Build, Test and Run the application locally by using the following commands
 ```shell script
 ./gradlew clean
@@ -240,7 +240,7 @@ spec:
 ```
 - Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the following values in the application.properties in src/main folder
 ```properties
-spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&useSSL=false&user=root
+spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
 ```
 
@@ -265,4 +265,4 @@ kubectl apply -f deployment/pages-service.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
-- After that verify the external-ip of the services and open the service as http://external-ip:8080 
+- After that verify the url of the services and open the service on browser
