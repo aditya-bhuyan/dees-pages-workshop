@@ -131,27 +131,6 @@ public class InMemoryPageRepository implements IPageRepository{
 }
 ```
 - Create a bean called  **pageRepository** in PageApplication.java which returns an implementation of *IPageRepository*
-```java
-package org.dell.kube.pages;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-@SpringBootApplication
-public class PageApplication {
-
-	
-	public static void main(String[] args) {
-		SpringApplication.run(PageApplication.class, args);
-	}
-
-	@Bean
-	public IPageRepository iPageRepository(){
-		return new InMemoryPageRepository();
-	}
-}
-```
 - Create a PageController.java in src folder. Create an Instance of IPageRepository and intialiase it with a constructor injection
 ```java
 package org.dell.kube.pages;
@@ -206,4 +185,5 @@ public class PageController {
 ```
 - Run the application and test by making CRUD operations using any CRUD tool like ARC, POSTMAN or CURL.
 - Build and Publish the docker image tag as **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
-- Check in the code to start github actions to deploy in Cluster
+- Check in the code to start github actions to deploy in PKS Cluster
+- Verify the deployments in PKS Cluster and test the application by opening it in browser as per instructions given in previous labs

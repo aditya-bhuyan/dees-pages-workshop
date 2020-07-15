@@ -5,7 +5,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
-  namespace: pages-deployment
+  namespace: aditya
 spec:
   ports:
   - port: 8080
