@@ -185,4 +185,5 @@ public class PageController {
 ```
 - Run the application and test by making CRUD operations using any CRUD tool like ARC, POSTMAN or CURL.
 - Build and Publish the docker image tag as **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
-- Check in the code to start github actions to deploy in Cluster
+- Check in the code to start github actions to deploy in PKS Cluster
+- Verify the deployments in PKS Cluster and test the application by opening it in browser as per instructions given in previous labs
