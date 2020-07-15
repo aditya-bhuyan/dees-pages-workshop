@@ -15,6 +15,7 @@
 - In all the above section replace \<your-name> with your own **first name**.
 #### Instructions for the  application to be deployed in minikube for local testing
 *minikube* and *kubectl* must be installed in the local machine vm. To start *minikube* "minikube start" or "minikube start --driver=virtualbox/docker" could be executed in the terminal.
+- Change type in *pages-service.yaml* to *NodePort*
 - Run the following commands in terminal to  run the application in minikube
 ```shell script
 kubectl -f deployment/pages-namespace.yaml
@@ -46,6 +47,7 @@ pks login -a pks-api-name  pks-cluster-name -u pks-username -k -p pks-password
 pks get-credentials pks-cluster-name
 ```
 Now we are good to execute our commands in the PKS cluster
+- Change type in *pages-service.yaml* to *LoadBalancer*
 - Execute the below commands to create namespace, deployment and service in pks cluster
 ```shell script
 kubectl -f deployment/pages-namespace.yaml
