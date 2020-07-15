@@ -273,7 +273,7 @@ Configuration Starts
 # Follow Instructions to Externalize the Welcome Message
 
 ## Code Change
-- Verify the *HomeControllerTest.java* file to check the change in test. The *HomeController.java* needs to be changed to pass the test case
+- Verify the *HomeControllerTests.java* file to check the change in test. The *HomeController.java* needs to be changed to pass the test case
 - In *HomeController.java* create a String variable **pageContent** and intialize it through constructor using @Value annotation. Use the same variable in getPage() method to return welcome message. 
 ```java
 package org.dell.kube.pages;
@@ -321,17 +321,17 @@ This would supply the value for pageContent during test and bootRun gradle tasks
 - Build the application using gradle
 - run the following commands to generate the Docker image
 ```shell script
-docker build -t <docker_username>/<docker_repo>:config .
+docker build -t <docker_username>/pages:config .
 ``` 
 - run the following command to run the image
 ```shell script
-docker run -p 8080:8080 -t <docker_username>/<docker_repo>:config
+docker run -p 8080:8080 -t <docker_username>/pages:config
 ```
 Then open the application at http://localhost:8080 to test it.
 
 - Push the image to docker
 ```shell script
-docker push <docker_username>/<docker_repo>:config
+docker push <docker_username>/pages:config
 ```
 
 ### Running the image in Kubernetes
@@ -341,7 +341,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: pages-config-map
-  namespace: pages-<your-name>
+  namespace: <your-name>
 data:
   PAGE_CONTENT: "Green-Pages coming from Yellow-world!"
 ```
@@ -355,7 +355,7 @@ env:
         name: pages-config-map
         key: PAGE_CONTENT
 ```
-- Run the following commands in kubernetes to run the application 
+- Run the following commands for minikube and pks to run the application in kubernetes cluster. Follow the previous lab to check the instructions to run the application in *minikube* and *PKS*. In the file **pages-service.yaml** value for *type* would be *NodePort* and *LoadBalancer* for minikube and pks respectively. 
 ```shell script
 kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/pages-config.yaml
@@ -368,8 +368,9 @@ kubectl get deployment pages --namespace pages-<your-name>
 kubectl get cm pages-config-map  --namespace pages-<your-name>
 kubectl get service pages  --namespace pages-<your-name>
 ```
-- Identify the external ip of the **pages** service from the above command
-- Open the pages url in http://\<external-ip>:8080 to test the application
+- Identify the url of the **pages** service from the output above command. Refer to the previous lab for instructions to know the url of the service for both minikube and pks
+- Open the pages url in browser to test the application.  
+- Push the code to github repository
 -------------
 Configuration Ends
 ------------------
