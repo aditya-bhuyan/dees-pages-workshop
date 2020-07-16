@@ -14,7 +14,7 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-@Repository
+
 public class MySqlPageRepository implements IPageRepository {
     private final JdbcTemplate jdbcTemplate;
     public MySqlPageRepository(DataSource dataSource)
