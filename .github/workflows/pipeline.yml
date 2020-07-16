@@ -17,8 +17,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Start Ubuntu MySQL
-        run: sudo systemctl start mysql
+      - name: Stop Ubuntu MySQL
+        run: sudo systemctl stop mysql
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql root password: ''
       - name: Build with Gradle
         uses: eskatos/gradle-command-action@v1
         with:
