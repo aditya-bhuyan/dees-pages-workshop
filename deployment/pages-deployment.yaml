@@ -41,11 +41,11 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
         resources: {}
 status: {}

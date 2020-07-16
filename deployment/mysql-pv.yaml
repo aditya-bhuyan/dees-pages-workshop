@@ -6,7 +6,7 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: manual
+  storageClassName: aditya-mysql
   capacity:
     storage: 2Gi
   accessModes:
@@ -20,7 +20,7 @@ metadata:
   name: mysql-volume-claim
   namespace: aditya
 spec:
-  storageClassName: manual
+  storageClassName: aditya-mysql
   accessModes:
     - ReadWriteMany
   resources:

@@ -5,7 +5,7 @@ metadata:
   namespace: aditya
 spec:
   volumeMode: Filesystem
-  storageClassName: manual
+  storageClassName: aditya-pv
   accessModes:
   - ReadWriteMany
   resources:
