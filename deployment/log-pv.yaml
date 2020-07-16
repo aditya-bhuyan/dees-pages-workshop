@@ -1,8 +1,8 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: log-persistent-volume
-  namespace: aditya
+  name: log-persistent-volume-<your-name>
+  namespace: <your-name>
   labels:
     type: local
 spec:

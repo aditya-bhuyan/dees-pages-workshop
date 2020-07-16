@@ -9,18 +9,16 @@ implementation 'mysql:mysql-connector-java:8.0.12'
 ```groovy
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
-		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
 ])
 ```
-- Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle
+- Add the junit dependency in  depenendency closure  in build.gradle
 ```groovy
-testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}*/
+testImplementation "junit:junit:4.12"
 ```
 - Add jdbc related properties in application.properties for both **main** and **test** folders
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false
 spring.datasource.username=root
 spring.datasource.password=
 ```
@@ -140,14 +138,14 @@ public class MySqlPageRepository implements IPageRepository {
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-volume
+  name: mysql-volume-<your-name>
   namespace: <your-name>
   labels:
     type: local
 spec:
-  storageClassName: manual
+  storageClassName: mysql-<your-name>
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -156,10 +154,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-volume-claim
+  name: mysql-volume-claim-<your-name>
   namespace: <your-name>
 spec:
-  storageClassName: manual
+  storageClassName: mysql-<your-name>
   accessModes:
     - ReadWriteMany
   resources:
@@ -201,7 +199,7 @@ spec:
           env:
             # Instead of using value directly we could also use secrets
            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
+             valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-pass
@@ -214,7 +212,7 @@ spec:
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
-            claimName: mysql-volume-claim
+            claimName: mysql-volume-claim-<your-name>
 ---
 apiVersion: v1
 kind: Service
@@ -231,7 +229,7 @@ spec:
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
-- Ensure that a MySQL instance with no password for user root in local machine is running
+- Ensure that a MySQL instance with no password for user root is running in local machine
 - Build, Test and Run the application locally by using the following commands
 ```shell script
 ./gradlew clean
@@ -243,15 +241,18 @@ spec:
 spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
 ```
-
+- Add the following in test.environment closure in build.gradle
+```groovy
+"SPRING_DATASOURCE_USERNAME": "root",
+"SPRING_DATASOURCE_PASSWORD": "root",
+```
 - Build the application by using the following command
 ```shell script
 ./gradlew clean
-./gradlew build -x test 
+./gradlew build  
 ```
 - Docker build and publish the image with tag **persist**
 - Make change in the pages-deployment.yaml and pipeline.yaml to update the tag
-- In the pipeline.yaml add "./gradlew clean build -x test" instead of "./gradlew clean build"
 - Change the pipeline.yaml to use the new mysql related yaml files. The last section should look like below
 ```yaml
 kubectl apply -f deployment/pages-namespace.yaml
@@ -262,7 +263,16 @@ kubectl apply -f deployment/mysql-secret.yaml
 kubectl apply -f deployment/mysql-deployment.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
+kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
-- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in pks cluster.
-- After that verify the url of the service and access it in browser
+- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
+- Use the below command to set default namespace
+```shell script
+kubectl config set-context --current --namespace=<your-name>
+```
+- Use the below command to connect to the mysql server and verify the schema and table
+```shell script
+kubectl run -it --rm --image=mysql:8.0 --restart=Never mysql-client -- mysql -h mysql -ppassword
+```
+- After that verify the url of the services and open the url on browser as per the instructions in the earlier labs to test the application.

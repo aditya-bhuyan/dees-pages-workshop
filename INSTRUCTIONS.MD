@@ -664,6 +664,220 @@ Logging and Monitoring Ends
 ----------------
 Inmmeory Starts
 ---------------
+## Instructions to Reach Inmemory Solution
+As part of the *inmemory-start* checkout 2 Test classes would be added to the codebase. On build the application would fail as there is no code to support the test cases. Follow the below instructions to reach solution.
+- Create new File Pages.java in src
+```java
+package org.dell.kube.pages;
+
+public class Page {
+
+    private Long id;
+    private String businessName;
+    private Long categoryId;
+    private String address;
+    private String contactNumber;
+
+    public Page(){}
+
+    public Page(String businessName, String address, long categoryId, String contactNumber) {
+        this.businessName = businessName;
+        this.address = address;
+        this.categoryId = categoryId;
+        this.contactNumber = contactNumber;
+    }
+
+    public Page(long id, String businessName, String address, long categoryId, String contactNumber) {
+        this.id = id;
+        this.businessName = businessName;
+        this.address = address;
+        this.categoryId = categoryId;
+        this.contactNumber = contactNumber;
+    }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+}
+```
+- Create new IPageRepository.java in src folder
+```java
+package org.dell.kube.pages;
+
+import java.util.List;
+
+public interface IPageRepository {
+    public Page create(Page page);
+    public Page read(long id);
+    public List<Page> list();
+    public Page update(Page page, long id);
+    public void delete(long id);
+}
+```
+- Create new InMemoryPageRepository which implements IPageRepository
+```java
+package org.dell.kube.pages;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class InMemoryPageRepository implements IPageRepository{
+    Map<Long,Page> repo = new HashMap<Long,Page>();
+    long counter;
+
+    @Override
+    public Page create(Page page) {
+        page.setId(++counter);
+        repo.put(page.getId(),page);
+        return repo.get(page.getId());
+    }
+
+    @Override
+    public Page read(long id) {
+        return repo.get(id);
+    }
+
+    @Override
+    public List<Page> list() {
+        return new ArrayList<Page>(repo.values());
+    }
+
+    @Override
+    public Page update(Page page, long id) {
+        Page data = repo.get(id);
+        if(data != null){
+            page.setId(id);
+            repo.put(page.getId(),page);
+            data = page;
+        }
+        return data;
+    }
+
+    @Override
+    public void delete(long id) {
+       repo.remove(id);
+    }
+}
+```
+- Create a bean called  **pageRepository** in PageApplication.java which returns an implementation of *IPageRepository*
+```java
+package org.dell.kube.pages;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class PageApplication {
+
+	
+	public static void main(String[] args) {
+		SpringApplication.run(PageApplication.class, args);
+	}
+
+	@Bean
+	public IPageRepository iPageRepository(){
+		return new InMemoryPageRepository();
+	}
+}
+```
+- Create a PageController.java in src folder. Create an Instance of IPageRepository and intialiase it with a constructor injection
+```java
+package org.dell.kube.pages;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/pages")
+public class PageController {
+
+    private IPageRepository pageRepository;
+    public PageController(IPageRepository pageRepository)
+    {
+        this.pageRepository = pageRepository;
+    }
+    @PostMapping
+    public ResponseEntity<Page> create(@RequestBody Page page) {
+        Page newPage= pageRepository.create(page);
+        return new ResponseEntity<Page>(newPage, HttpStatus.CREATED);
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<Page> read(@PathVariable long id) {
+        Page page = pageRepository.read(id);
+        if(page!=null)
+            return new ResponseEntity<Page>(page,HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping
+    public ResponseEntity<List<Page>> list() {
+        List<Page> pages= pageRepository.list();
+        return new ResponseEntity<List<Page>>(pages,HttpStatus.OK);
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<Page> update(@RequestBody Page page, @PathVariable long id) {
+        Page updatedPage= pageRepository.update(page,id);
+        if(updatedPage!=null)
+            return new ResponseEntity<Page>(updatedPage,HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable long id) {
+        pageRepository.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+}
+```
+- Run the application and test by making CRUD operations using any CRUD tool like ARC, POSTMAN or CURL.
+- Build and Publish the docker image as tag **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
+- Check in the code to start github actions to deploy in Cluster
+-----------------
+Inmemory Solution Ends
+------------------
+Persistence Starts
+-----------------
 ## Instructions to use JDBC Repository Solution
 As part of the *persistence-start* a new Test class is added to the code base. Gradle build would fail as there no code to match the Test class. Follow the below instructions to reach solution to use JDBC Repository
 - Add jpa and mysql connector dependencies in build.gradle. It will fetch the Spring JDBC library.
@@ -675,18 +889,16 @@ implementation 'mysql:mysql-connector-java:8.0.12'
 ```groovy
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
-		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root",
+		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
 ])
 ```
-- Remove the exclude closure for the spring-boot-starter-test testImplementaion dependency in build.gradle
+- Add the junit dependency in  depenendency closure  in build.gradle
 ```groovy
-testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}*/
+testImplementation "junit:junit:4.12"
 ```
 - Add jdbc related properties in application.properties for both **main** and **test** folders
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+spring.datasource.url=jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false
 spring.datasource.username=root
 spring.datasource.password=
 ```
@@ -806,14 +1018,14 @@ public class MySqlPageRepository implements IPageRepository {
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-volume
+  name: mysql-volume-<your-name>
   namespace: <your-name>
   labels:
     type: local
 spec:
-  storageClassName: manual
+  storageClassName: mysql-<your-name>
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   hostPath:
@@ -822,10 +1034,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-volume-claim
+  name: mysql-volume-claim-<your-name>
   namespace: <your-name>
 spec:
-  storageClassName: manual
+  storageClassName: mysql-<your-name>
   accessModes:
     - ReadWriteMany
   resources:
@@ -867,7 +1079,7 @@ spec:
           env:
             # Instead of using value directly we could also use secrets
            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
+             valueFrom:
                 secretKeyRef:
                   name: mysql-secret
                   key: mysql-pass
@@ -880,7 +1092,7 @@ spec:
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
-            claimName: mysql-volume-claim
+            claimName: mysql-volume-claim-<your-name>
 ---
 apiVersion: v1
 kind: Service
@@ -897,7 +1109,7 @@ spec:
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
-- Ensure that a MySQL instance with no password for user root in local machine is running
+- Ensure that a MySQL instance with no password for user root is running in local machine
 - Build, Test and Run the application locally by using the following commands
 ```shell script
 ./gradlew clean
@@ -909,15 +1121,18 @@ spec:
 spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
 ```
-
+- Add the following in test.environment closure in build.gradle
+```groovy
+"SPRING_DATASOURCE_USERNAME": "root",
+"SPRING_DATASOURCE_PASSWORD": "root",
+```
 - Build the application by using the following command
 ```shell script
 ./gradlew clean
-./gradlew build -x test 
+./gradlew build  
 ```
 - Docker build and publish the image with tag **persist**
 - Make change in the pages-deployment.yaml and pipeline.yaml to update the tag
-- In the pipeline.yaml add "./gradlew clean build -x test" instead of "./gradlew clean build"
 - Change the pipeline.yaml to use the new mysql related yaml files. The last section should look like below
 ```yaml
 kubectl apply -f deployment/pages-namespace.yaml
@@ -928,10 +1143,19 @@ kubectl apply -f deployment/mysql-secret.yaml
 kubectl apply -f deployment/mysql-deployment.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
+kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
-- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in pks cluster.
-- After that verify the url of the service and access it in browser
+- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
+- Use the below command to set default namespace
+```shell script
+kubectl config set-context --current --namespace=<your-name>
+```
+- Use the below command to connect to the mysql server and verify the schema and table
+```shell script
+kubectl run -it --rm --image=mysql:8.0 --restart=Never mysql-client -- mysql -h mysql -ppassword
+```
+- After that verify the url of the services and open the url on browser as per the instructions in the earlier labs to test the application.
 ------------------
 Persistence Ends
 -----------------
