@@ -607,8 +607,7 @@ spec:
     spec:
       volumes:
       - name: log-volume
-        persistentVolumeClaim:
-          claimName: log-persistent-claim
+        emptyDir: {}
       containers:
       - image: adityapratapbhuyan/pages:logging
         imagePullPolicy: Always
@@ -627,12 +626,12 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
         resources: {}
 status: {}
 ```
@@ -644,10 +643,9 @@ status: {}
 - Change the tag to *logging* in pages-deployment.yaml
 - Use the following commands to deploy the application in kubernetes
 ```shell script
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
+kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
@@ -665,8 +663,8 @@ Logging and Monitoring Ends
 Inmmeory Starts
 ---------------
 ## Instructions to Reach Inmemory Solution
-As part of the *inmemory-start* checkout 2 Test classes would be added to the codebase. On build the application would fail as there is no code to support the test cases. Follow the below instructions to reach solution.
-- Create new File Pages.java in src
+As part of the *inmemory-start* checkout 2 Test classes would be added to the codebase. On build the application would fail as there is no code to support the test cases. Follow the below instructions to reach solution so that the test cases will pass.
+- Create new File Pages.java in src/main under *org.dell.kube.pages* package
 ```java
 package org.dell.kube.pages;
 
@@ -735,7 +733,7 @@ public class Page {
     }
 }
 ```
-- Create new IPageRepository.java in src folder
+- Create new IPageRepository.java in src/main under *org.dell.kube.pages* package
 ```java
 package org.dell.kube.pages;
 
@@ -850,7 +848,7 @@ public class PageController {
 }
 ```
 - Run the application and test by making CRUD operations using any CRUD tool like ARC, POSTMAN or CURL.
-- Build and Publish the docker image as tag **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
+- Build and Publish the docker image tag as **repo** and change the tag value both in pages-deployment.yaml and pipeline.yaml also
 - Check in the code to start github actions to deploy in PKS Cluster
 - Verify the deployments in PKS Cluster and test the application by opening it in browser as per instructions given in previous labs
 -----------------

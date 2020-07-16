@@ -2,7 +2,8 @@ name: Pages Pipeline
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   build-artifact:
@@ -14,9 +15,10 @@ jobs:
         with:
           java-version: 11
       - name: Build with Gradle
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build
+          gradle-version: 6.4.1
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -54,10 +56,9 @@ jobs:
           pks login -a ${{ secrets.PKS_API }}  ${{ secrets.PKS_CLUSTER }} -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
           pks get-credentials pks-workshop
           kubectl apply -f deployment/pages-namespace.yaml
-          kubectl apply -f deployment/log-pv.yaml
-          kubectl apply -f deployment/log-pvc.yaml
           kubectl apply -f deployment/pages-config.yaml
           kubectl apply -f deployment/pages-service.yaml
+          kubectl delete -f deployment/pages-deployment.yaml
           kubectl apply -f deployment/pages-deployment.yaml
 
 
