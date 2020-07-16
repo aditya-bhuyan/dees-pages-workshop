@@ -57,7 +57,7 @@ public class MySqlPageRepositoryTest {
 
 
     @Autowired
-    void setDataSource(DataSource dataSource) {
+    MySqlPageRepositoryTest(DataSource dataSource) {
         repo = new MySqlPageRepository(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
