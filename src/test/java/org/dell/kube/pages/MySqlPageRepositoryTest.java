@@ -38,7 +38,7 @@ public class MySqlPageRepositoryTest {
     }
     @BeforeEach
     public void setUp() {
-        /*MysqlDataSource dataSource = new MysqlDataSource();
+        MysqlDataSource dataSource = new MysqlDataSource();
         String data = System.getenv("SPRING_DATASOURCE_URL");
         logger.info(" SPRING_DATASOURCE_URL :"+data);
         dataSource.setUrl(data);
@@ -50,17 +50,11 @@ public class MySqlPageRepositoryTest {
         dataSource.setPassword(data);
         logger.info("Data Source is:"+dataSource);
         repo = new MySqlPageRepository(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);*/
+        jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DELETE FROM pages");
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
-
-    @Autowired
-    MySqlPageRepositoryTest(DataSource dataSource) {
-        repo = new MySqlPageRepository(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Test
     public void createInsertsAPageRecord() {
