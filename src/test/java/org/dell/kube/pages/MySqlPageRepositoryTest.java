@@ -34,7 +34,16 @@ public class MySqlPageRepositoryTest {
     @BeforeEach
     public void setUp() {
         MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
+        String data = System.getenv("SPRING_DATASOURCE_URL");
+        System.out.println(" SPRING_DATASOURCE_URL :"+data);
+        dataSource.setUrl(data);
+        data = System.getenv("SPRING_DATASOURCE_USERNAME");
+        System.out.println(" SPRING_DATASOURCE_USERNAME :"+data);
+        dataSource.setUser(data);
+        data = System.getenv("SPRING_DATASOURCE_PASSWORD");
+        System.out.println(" SPRING_DATASOURCE_PASSWORD :"+data);
+        dataSource.setPassword(data);
+        System.out.println("Data Source is:"+dataSource);
         repo = new MySqlPageRepository(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DELETE FROM pages");
