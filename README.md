@@ -1,53 +1,6 @@
 ## Instructions for the logging and monitoring
 
-### Creating and Updating the log-pv.yaml and log-pvc.yaml
-- Create two files **log-pv.yaml** and **log-pvc.yaml** under deployment directory
-- For log-pv.yaml fill all the sections
-  * Assign name as log-persistent-volume under metadata section
-  * Assign volumeMode to FileSystem under spec
-  * Assign storageClassName to slow under spec
-  * Capacity storage would be 500Mi
-  * accessModes would be ReadWriteOnce
-  * hostPath would be "/mnt/logs"
-```yaml
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: log-persistent-volume
-  namespace: <your-name>
-  labels:
-    type: local
-spec:
-  volumeMode: Filesystem
-  storageClassName: manual
-  capacity:
-    storage: 500Mi
-  accessModes:
-  - ReadWriteMany
-  hostPath:
-    path: "/mnt/logs"
-```
-- For log-pvc.yaml fill all the sections
-  * name would be log-persistent-claim
-  * volumeMode would be  FileSystem under spec
-  * storageClassName would be slow under spec
-  * resources/requests/storage would be 500Mi
-  * accessModes would be ReadWriteOnce
- ```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: log-persistent-claim
-  namespace: <your-name>
-spec:
-  volumeMode: Filesystem
-  storageClassName: manual
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 500Mi
-```
+### Creating and Updating the Volume
 - Add below properties in application.properties in both test and source
 ```properties
 logging.file.name=/var/tmp/pages-app.log
@@ -145,8 +98,7 @@ spec:
     spec:
       volumes:
       - name: log-volume
-        persistentVolumeClaim:
-          claimName: log-persistent-claim
+        emptyDir: {}
       containers:
       - image: adityapratapbhuyan/pages:logging
         imagePullPolicy: Always
@@ -165,12 +117,16 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 2
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 2
         resources: {}
 status: {}
 ```
@@ -180,22 +136,16 @@ status: {}
 ```
 - Docker build and push the application with tag **logging**
 - Change the tag to *logging* in pages-deployment.yaml
-- Use the following commands to deploy the application in kubernetes
+- Use the following commands to deploy the application in Minikube kubernetes
 ```shell script
 kubectl apply -f deployment/pages-namespace.yaml
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
+kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
-- Put below instructions in pipeline.yaml  to create pv and pvc, just below the statement "kubectl apply -f deployment/pages-namespace.yaml"
-```yaml
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
-```
 - Push the code to github repository to start the pipeline
-- In PKS cluster the application ready time would be delayed. The application would be ready after 150 seconds as the readiness probe would start after 150 seconds
+- In PKS cluster the application ready time would be delayed. The application would be ready after 15 seconds as the readiness probe would start after 150 seconds
 - Keep on checking the status of the pod which is part of the pages deployment
 - After sometime though the status might be **Running**, it might be showing **Not Ready**
