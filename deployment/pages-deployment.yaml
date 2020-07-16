@@ -5,7 +5,7 @@ metadata:
     app: pages
     servicefor: pages
   name: pages
-  namespace: aditya
+  namespace: <your-name>
 spec:
   replicas: 1
   selector:
@@ -21,31 +21,34 @@ spec:
     spec:
       volumes:
       - name: log-volume
-        persistentVolumeClaim:
-          claimName: log-persistent-claim
+        emptyDir: {}
       containers:
-      - image: adityapratapbhuyan/pages:repo
-        imagePullPolicy: Always
-        name: pages
-        ports:
-          - containerPort: 8080
-        env:
-        - name: PAGE_CONTENT
-          valueFrom:
-              configMapKeyRef:
-                name: pages-config-map
-                key: PAGE_CONTENT
-        volumeMounts:
-        - name: log-volume
-          mountPath: "/var/tmp/"
-        readinessProbe:
-          tcpSocket:
-           port: 8080
-          initialDelaySeconds: 150
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          initialDelaySeconds: 150
-        resources: {}
+        - image: adityapratapbhuyan/pages:logging
+          imagePullPolicy: Always
+          name: pages
+          ports:
+            - containerPort: 8080
+          env:
+          - name: PAGE_CONTENT
+            valueFrom:
+                configMapKeyRef:
+                  name: pages-config-map
+                  key: PAGE_CONTENT
+          volumeMounts:
+          - name: log-volume
+            mountPath: "/var/tmp/"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            successThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            successThreshold: 2
+          resources: {}
 status: {}
