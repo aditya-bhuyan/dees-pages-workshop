@@ -4,18 +4,9 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -23,22 +14,17 @@ import java.util.TimeZone;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MySqlPageRepositoryTest {
-    Logger logger = LoggerFactory.getLogger(MySqlPageRepositoryTest.class);
     private final MySqlPageRepository repo;
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     MySqlPageRepositoryTest(){
         MysqlDataSource dataSource = new MysqlDataSource();
         String data = System.getenv("SPRING_DATASOURCE_URL");
-        logger.info(" SPRING_DATASOURCE_URL :"+data);
         dataSource.setUrl(data);
         data = System.getenv("SPRING_DATASOURCE_USERNAME");
-        logger.info(" SPRING_DATASOURCE_USERNAME :"+data);
         dataSource.setUser(data);
         data = System.getenv("SPRING_DATASOURCE_PASSWORD");
-        logger.info(" SPRING_DATASOURCE_PASSWORD :"+data);
         dataSource.setPassword(data);
-        logger.info("Data Source is:"+dataSource);
         repo = new MySqlPageRepository(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
