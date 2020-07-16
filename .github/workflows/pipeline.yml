@@ -22,7 +22,7 @@ jobs:
       - name: Build with Gradle
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build
+          arguments: build --scan
           gradle-version: 6.4.1
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
