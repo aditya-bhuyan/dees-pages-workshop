@@ -19,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MySqlPageRepositoryTest {
     Logger logger = LoggerFactory.getLogger(MySqlPageRepositoryTest.class);
-    private IPageRepository repo;
+    @Autowired
+    private MySqlPageRepository repo;
     private JdbcTemplate jdbcTemplate;
 
     @Before
@@ -38,7 +39,7 @@ public class MySqlPageRepositoryTest {
     }
     @BeforeEach
     public void setUp() {
-        MysqlDataSource dataSource = new MysqlDataSource();
+       /* MysqlDataSource dataSource = new MysqlDataSource();
         String data = System.getenv("SPRING_DATASOURCE_URL");
         logger.info(" SPRING_DATASOURCE_URL :"+data);
         dataSource.setUrl(data);
@@ -49,8 +50,8 @@ public class MySqlPageRepositoryTest {
         logger.info(" SPRING_DATASOURCE_PASSWORD :"+data);
         dataSource.setPassword(data);
         logger.info("Data Source is:"+dataSource);
-        repo = new MySqlPageRepository(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        repo = new MySqlPageRepository(dataSource);*/
+        jdbcTemplate = repo.getJdbcTemplate();
         jdbcTemplate.execute("DELETE FROM pages");
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }

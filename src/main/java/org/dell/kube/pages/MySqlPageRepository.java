@@ -14,7 +14,7 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-
+@Repository
 public class MySqlPageRepository implements IPageRepository {
     private final JdbcTemplate jdbcTemplate;
     public MySqlPageRepository(DataSource dataSource)
@@ -97,5 +97,9 @@ public class MySqlPageRepository implements IPageRepository {
                 ")\n" +
                 "engine = innodb\n" +
                 "default charset = utf8;");
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
     }
 }
