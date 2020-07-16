@@ -2,7 +2,11 @@ name: Pages Pipeline
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - persistence
+    tags:
+      - persistence-solution
 
 jobs:
   build-artifact:
@@ -13,10 +17,16 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql root password: 'password'
       - name: Build with Gradle
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build -x test
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build
+          gradle-version: 6.4.1
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
