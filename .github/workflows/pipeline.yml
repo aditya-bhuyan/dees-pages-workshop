@@ -23,7 +23,7 @@ jobs:
         uses: mirromutth/mysql-action@v1.1
         with:
           mysql version: '8.0'
-          mysql root password: ''
+          MYSQL_ROOT_PASSWORD: 'root'
       - name: Build with Gradle
         uses: eskatos/gradle-command-action@v1
         with:
