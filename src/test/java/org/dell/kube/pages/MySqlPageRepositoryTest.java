@@ -6,8 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -36,7 +38,7 @@ public class MySqlPageRepositoryTest {
     }
     @BeforeEach
     public void setUp() {
-        MysqlDataSource dataSource = new MysqlDataSource();
+        /*MysqlDataSource dataSource = new MysqlDataSource();
         String data = System.getenv("SPRING_DATASOURCE_URL");
         logger.info(" SPRING_DATASOURCE_URL :"+data);
         dataSource.setUrl(data);
@@ -48,9 +50,16 @@ public class MySqlPageRepositoryTest {
         dataSource.setPassword(data);
         logger.info("Data Source is:"+dataSource);
         repo = new MySqlPageRepository(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);*/
         jdbcTemplate.execute("DELETE FROM pages");
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
+
+
+    @Autowired
+    void setDataSource(DataSource dataSource) {
+        repo = new MySqlPageRepository(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Test
