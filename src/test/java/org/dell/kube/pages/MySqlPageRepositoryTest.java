@@ -4,6 +4,8 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class MySqlPageRepositoryTest {
+    Logger logger = LoggerFactory.getLogger(MySqlPageRepositoryTest.class);
     private IPageRepository repo;
     private JdbcTemplate jdbcTemplate;
 
@@ -35,15 +38,15 @@ public class MySqlPageRepositoryTest {
     public void setUp() {
         MysqlDataSource dataSource = new MysqlDataSource();
         String data = System.getenv("SPRING_DATASOURCE_URL");
-        System.out.println(" SPRING_DATASOURCE_URL :"+data);
+        logger.info(" SPRING_DATASOURCE_URL :"+data);
         dataSource.setUrl(data);
         data = System.getenv("SPRING_DATASOURCE_USERNAME");
-        System.out.println(" SPRING_DATASOURCE_USERNAME :"+data);
+        logger.info(" SPRING_DATASOURCE_USERNAME :"+data);
         dataSource.setUser(data);
         data = System.getenv("SPRING_DATASOURCE_PASSWORD");
-        System.out.println(" SPRING_DATASOURCE_PASSWORD :"+data);
+        logger.info(" SPRING_DATASOURCE_PASSWORD :"+data);
         dataSource.setPassword(data);
-        System.out.println("Data Source is:"+dataSource);
+        logger.info("Data Source is:"+dataSource);
         repo = new MySqlPageRepository(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DELETE FROM pages");
