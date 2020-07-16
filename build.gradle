@@ -16,6 +16,8 @@ bootRun.environment([
 
 test.environment([
 		"PAGE_CONTENT": "YellowPages",
+		"SPRING_DATASOURCE_USERNAME": "root",
+		"SPRING_DATASOURCE_PASSWORD": "root",
 		"SPRING_DATASOURCE_URL": "jdbc:mysql://localhost:3306/pages?createDatabaseIfNotExist=true&useSSL=false&user=root",
 ])
 dependencies {
@@ -23,9 +25,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'mysql:mysql-connector-java:8.0.12'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') /*{
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}*/
+	}
+	testImplementation "junit:junit:4.12"
 }
 
 test {

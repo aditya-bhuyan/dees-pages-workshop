@@ -1,5 +1,7 @@
 package org.dell.kube.pages;
 
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PageRepositoryTest {
     private IPageRepository repo;
 
-     @BeforeEach
+    @BeforeEach
     public void setUp() {
         repo = new InMemoryPageRepository();
     }
