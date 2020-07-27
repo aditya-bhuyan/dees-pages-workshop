@@ -1,7 +1,7 @@
 # Follow Instructions to Externalize the Welcome Message
 
 ## Code Change
-- Verify the *HomeControllerTests.java* file to check the change in test. The *HomeController.java* needs to be changed to pass the test case
+- Verify the *HomeControllerTests.java* file to check the change in test. The *HomeController.java* needs to be changed to pass the test case.
 - In *HomeController.java* create a String variable **pageContent** and intialize it through constructor using @Value annotation. Use the same variable in getPage() method to return welcome message. 
 ```java
 package org.dell.kube.pages;
@@ -53,7 +53,7 @@ docker build -t <docker_username>/pages:config .
 ``` 
 - run the following command to run the image
 ```shell script
-docker run -p 8080:8080 -t <docker_username>/pages:config
+docker run --env PAGE_CONTENT="Green-Pages coming from Yellow-world!" -p 8080:8080 -t <docker_username>/pages:config
 ```
 Then open the application at http://localhost:8080 to test it.
 
@@ -74,7 +74,7 @@ data:
   PAGE_CONTENT: "Green-Pages coming from Yellow-world!"
 ```
 - In *pages-deployment.yaml* replace the image tag name with *config*
-- In *pages-deployment.yaml* make changes to set the PAGE_CONTENT value reading from the ConfigMap. Add the below content inside container section
+- In *pages-deployment.yaml* make changes to set the PAGE_CONTENT value reading from the ConfigMap. Add the below content inside container section with proper alignment.
 ```yaml
 env:
   - name: PAGE_CONTENT
@@ -88,8 +88,10 @@ env:
 kubectl apply -f deployment/pages-namespace.yaml
 kubectl apply -f deployment/pages-config.yaml
 kubectl apply -f deployment/pages-service.yaml
+kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
+We are deleting the pages deployment first as we are adding ConfigMapRef in it.
 - Verify the deployment, configMap and service are created by using the following command
 ```shell script
 kubectl get deployment pages --namespace pages-<your-name>
