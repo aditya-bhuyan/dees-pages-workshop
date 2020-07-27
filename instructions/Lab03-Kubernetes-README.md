@@ -37,10 +37,10 @@ kubectl config set-context --current --namespace=<your-name>
 
 #### Instructions for the  application to be deployed in Enterprise PKS
 - **pks cli** must have been installed already 
-- Receive the **pks-username**, **pks-password**, **pks-cluster-name** and **pks-api-name**.
+- Get the **pks-username**, **pks-password**, **pks-cluster-name** and **pks-api-name** from your instructor.
 - Execute the below command to login to the PKS 
 ```shell script
-pks login -a pks-api-name  pks-cluster-name -u pks-username -k -p pks-password
+pks login -a pks-api-name   -u pks-username -k -p pks-password
 ```
 - Execute the below command to enter the pks-cluster
 ```shell script
@@ -48,7 +48,7 @@ pks get-credentials pks-cluster-name
 ```
 Now we are good to execute our commands in the PKS cluster
 - Change type in *pages-service.yaml* to *LoadBalancer*
-- Execute the below commands to create namespace, deployment and service in pks cluster
+- Execute the below commands to create namespace, deployment and service in pks cluster in below order
 ```shell script
 kubectl -f deployment/pages-namespace.yaml
 kubectl -f deployment/pages-service.yaml
@@ -64,6 +64,6 @@ kubectl get service pages --namespace <your-name>
 kubectl config set-context --current --namespace=<your-name>
 ```
 - Identify the external ip of the **pages** service from the output of "kubectl get service pages" command.
-- Open the pages url in http://\<external-ip>:8080 to test the application
+- Open the pages url in http://external-ip:8080 to test the application
 
 - Push your code to github
