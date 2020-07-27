@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HomeControllerTest {
+public class HomeControllerTests {
     private final String message = "YellowPages";
 
     @Test
