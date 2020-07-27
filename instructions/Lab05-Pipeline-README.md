@@ -96,4 +96,4 @@ jobs:
 - Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
 
 - Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
-- Verify your objects in pks cluster and access the service in browser as mentioned in the previous lab
+- Verify your objects created in pks cluster and access the service in browser as per the commands mentioned in the previous lab
