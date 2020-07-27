@@ -1,7 +1,7 @@
 ## Instruction to start the *Hello Application* from scratch
 - Download the project zip file from [here](https://dell-edu-lab-store.s3.ap-south-1.amazonaws.com/repository/pages.zip) and extract it inside workspace folder
 - Create a repository in git with the name **pages**. Keep everything default, while creating the repository, don't change anything other than default.
-- Copy the *git remote add origin <repo address>*  and execute it in the directory 
+- Copy the *git remote add origin <repo address>* command from the landing page and execute it in the directory 
 - Create a build.gradle file with following content
 
 ```groovy
