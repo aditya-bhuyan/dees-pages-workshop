@@ -18,9 +18,9 @@
 - Change type in *pages-service.yaml* to *NodePort*
 - Run the following commands in terminal to  run the application in minikube
 ```shell script
-kubectl -f deployment/pages-namespace.yaml
-kubectl -f deployment/pages-service.yaml
-kubectl -f deployment/pages-deployment.yaml
+kubectl apply -f  deployment/pages-namespace.yaml
+kubectl apply -f deployment/pages-service.yaml
+kubectl apply -f deployment/pages-deployment.yaml
 ```
 - The above commands will create a namespace in the name \<your-name> and a deployment, service called pages under the same namespace.
 Verify the namespace, deployment and service are created by using the following command
@@ -37,7 +37,7 @@ kubectl config set-context --current --namespace=<your-name>
 
 #### Instructions for the  application to be deployed in Enterprise PKS
 - **pks cli** must have been installed already 
-- Get the **pks-username**, **pks-password**, **pks-cluster-name** and **pks-api-name** from your instructor.
+- Get the PKS Cluster details like **pks-username**, **pks-password**, **pks-cluster-name** and **pks-api-name** from your instructor.
 - Execute the below command to login to the PKS 
 ```shell script
 pks login -a pks-api-name   -u pks-username -k -p pks-password
@@ -50,9 +50,9 @@ Now we are good to execute our commands in the PKS cluster
 - Change type in *pages-service.yaml* to *LoadBalancer*
 - Execute the below commands to create namespace, deployment and service in pks cluster in below order
 ```shell script
-kubectl -f deployment/pages-namespace.yaml
-kubectl -f deployment/pages-service.yaml
-kubectl -f deployment/pages-deployment.yaml
+kubectl apply -f deployment/pages-namespace.yaml
+kubectl apply -f deployment/pages-service.yaml
+kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Verify the namespace, deployment and service are created by using the following command in the pks cluster
 ```shell script
