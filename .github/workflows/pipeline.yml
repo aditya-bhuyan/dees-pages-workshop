@@ -14,9 +14,10 @@ jobs:
         with:
           java-version: 11
       - name: Build with Gradle
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: build
+          gradle-version: 6.4
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -39,7 +40,7 @@ jobs:
         run: |
           sudo apt-get update
           wget -O pivnet github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.55/pivnet-linux-amd64-0.0.55 && chmod +x pivnet && sudo mv pivnet /usr/local/bin
-          pivnet login --api-token=cd8d86d24afa43b9bd989012adcbf3f5-r
+          pivnet login --api-token=${{ secrets.PKS_TOKEN }}
           pivnet download-product-files --product-slug='pivotal-container-service' --release-version='1.7.0' --product-file-id=646536
           sudo mv pks-linux-amd64-1.7.0-build.483 pks
           chmod +x pks
@@ -51,11 +52,12 @@ jobs:
           sudo mv kubectl /usr/local/bin/
       - name: PKS Login
         run: |
-          pks login -a ${{ secrets.PKS_API }}  ${{ secrets.PKS_CLUSTER }} -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
-          pks get-credentials pks-workshop
+          pks login -a ${{ secrets.PKS_API }}   -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
+          pks get-credentials ${{ secrets.PKS_CLUSTER }}
           kubectl apply -f deployment/pages-namespace.yaml
           kubectl apply -f deployment/pages-config.yaml
           kubectl apply -f deployment/pages-service.yaml
+          kubectl delete -f deployment/pages-deployment.yaml
           kubectl apply -f deployment/pages-deployment.yaml
 
 
