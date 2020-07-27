@@ -1,7 +1,5 @@
-- Create a settings.gradle file in the root project directory with below content
-```groovy
-rootProject.name = 'pages'
-```
+### Instructions to reach solution for the Hello Lab based on the Test Cases
+
 - We need to create PageApplication.java and HelloController.java based on test classes
 - Create a package **org.dell.kube.pages**  under *src/main/java*
 - Create class PageApplication.java in the package with below content
@@ -20,7 +18,7 @@ public class PageApplication {
 	}
 }
 ```
-- Create HomeController.java with below content in same package
+- Create HomeController.java with below content in **org.dell.kube.pages**  package
 ```java
 package org.dell.kube.pages;
 
@@ -62,4 +60,9 @@ management.endpoint.health.show-details=always
 ./gradlew bootRun
 ```
 - Open the application @ http://localhost:8080 in the browser to test the application. Check the actuator end points @ http://localhost:8080/actuator
-- Push code to github repository
+- Push code to github repository by using following command
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin master
+```
