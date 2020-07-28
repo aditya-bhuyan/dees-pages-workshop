@@ -1,9 +1,28 @@
+# Follow Instructions to create pipeline using github actions
+
+## Step 1
+- Create the following *secrets* in your github repository. To create secrets access  the settings section of your repository and select secrets.
+    * DOCKER_USERNAME [Your own docker account user name]
+    * DOCKER_PASSWORD [Your own docker account login password ]
+    * PKS_API [Get it from the instructor]
+    * PKS_USERNAME [Get it from the instructor]
+    * PKS_PASSWORD [Get it from the instructor]
+    * PKS_CLUSTER [Get it from the instructor]
+    * PKS_TOKEN [Follow the below steps to create it]
+- Steps to create pivnet token as per your own account and put it in pipeline.yaml
+```text
+1. Create an account using the link https://account.run.pivotal.io/z/uaa/sign-up if pivotal account is not there already
+2. Check your inbox and verify email, so that you can sign in successfully.
+3. Access https://network.pivotal.io/users/dashboard/edit-profile
+4. Create an API token and copy it and assign it to PKS_TOKEN
+```
+- Create the following directory .github/workflows and create a file called pipeline.yaml under it with below content
+```yaml
 name: Pages Pipeline
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   build-artifact:
@@ -30,8 +49,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: adityapratapbhuyan/pages
-          tags: logging
+          repository: <docker-user-name>/pages
+          tags: <tag-name>
   deploy-image-to-pks:
     needs: build-artifact
     runs-on: ubuntu-latest
@@ -41,7 +60,7 @@ jobs:
         run: |
           sudo apt-get update
           wget -O pivnet github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.55/pivnet-linux-amd64-0.0.55 && chmod +x pivnet && sudo mv pivnet /usr/local/bin
-          pivnet login --api-token=9-uEpaLrsx73ziLJzQY6
+          pivnet login --api-token=${{ secrets.PKS_TOKEN }}
           pivnet download-product-files --product-slug='pivotal-container-service' --release-version='1.7.0' --product-file-id=646536
           sudo mv pks-linux-amd64-1.7.0-build.483 pks
           chmod +x pks
@@ -53,12 +72,12 @@ jobs:
           sudo mv kubectl /usr/local/bin/
       - name: PKS Login
         run: |
-          pks login -a ${{ secrets.PKS_API }}  ${{ secrets.PKS_CLUSTER }} -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
-          pks get-credentials pks-workshop
+          pks login -a ${{ secrets.PKS_API }}   -u ${{ secrets.PKS_USERNAME }} -k -p ${{ secrets.PKS_PASSWORD }}
+          pks get-credentials ${{ secrets.PKS_CLUSTER }}
           kubectl apply -f deployment/pages-namespace.yaml
           kubectl apply -f deployment/pages-config.yaml
           kubectl apply -f deployment/pages-service.yaml
-          kubectl delete -f deployment/pages-service.yaml
+          kubectl delete -f deployment/pages-deployment.yaml
           kubectl apply -f deployment/pages-deployment.yaml
 
 
@@ -73,3 +92,8 @@ jobs:
     #6 - Create ConfigMap/Secrets
     #7 - Create Service
     #8-  Create Deployment
+```
+- Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
+
+- Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
+- Verify your objects created in pks cluster and access the service in browser as per the commands mentioned in the previous lab
