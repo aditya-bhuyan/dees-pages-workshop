@@ -145,3 +145,12 @@ public class HomeApiTest {
     }
 }
 ```
+- Create a *settings.gradle* file with below content in the root project
+```groovy
+rootProject.name = 'pages'
+```
+- Push the content to the local git repository
+```shell
+git add .
+git commit -m "MESSAGE"
+```
