@@ -1,6 +1,6 @@
 ## Instructions to Reach Inmemory Solution
 As part of the *inmemory-start* checkout 2 Test classes would be added to the codebase. On build the application would fail as there is no code to support the test cases. Follow the below instructions to reach solution so that the test cases will pass.
-- Create new File Pages.java in src/main under *org.dell.kube.pages* package
+- Create new File Page.java in src/main under *org.dell.kube.pages* package
 ```java
 package org.dell.kube.pages;
 
