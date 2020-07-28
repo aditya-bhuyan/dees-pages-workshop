@@ -100,7 +100,7 @@ spec:
       - name: log-volume
         emptyDir: {}
       containers:
-      - image: adityapratapbhuyan/pages:logging
+      - image: <docker-user-name>/pages:logging
         imagePullPolicy: Always
         name: pages
         ports:
@@ -117,19 +117,20 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 150
           periodSeconds: 5
           successThreshold: 2
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 150
           periodSeconds: 5
-          successThreshold: 2
+          successThreshold: 1
         resources: {}
 status: {}
 ```
+- Replace the docker-user-name with your own docker-user-name
 - Build the application with 
 ```sh
 ./gradlew clean build
@@ -146,6 +147,6 @@ kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
 - Push the code to github repository to start the pipeline
-- In PKS cluster the application ready time would be delayed. The application would be ready after 15 seconds as the readiness probe would start after 150 seconds
+- In PKS cluster the application ready time would be delayed. The application would be ready after 150 seconds as the readiness probe would start after 150 seconds.
 - Keep on checking the status of the pod which is part of the pages deployment
-- After sometime though the status might be **Running**, it might be showing **Not Ready**
+- After sometime though the status of the pod might be **Running**, but it might be showing **Not Ready** as it needs atleast 150 seconds to be ready.
