@@ -162,7 +162,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ```
 - Create a new file called mysql-secret.yaml in deployment folder
 ```yaml
@@ -237,7 +237,7 @@ spec:
 ./gradlew build
 ./gradlew bootRun
 ```
-- Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the following values in the application.properties in src/main folder
+- Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the values of following attributes in the application.properties in src/main folder
 ```properties
 spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
