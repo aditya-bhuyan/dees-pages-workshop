@@ -30,11 +30,11 @@ spec:
               name: mysql
           volumeMounts:
             - name: mysql-storage
-              mountPath: "/var/lib/mysql"
+              mountPath: "/var/lib/mysql-aditya"
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
-            claimName: mysql-volume-claim
+            claimName: mysql-volume-claim-aditya
 ---
 apiVersion: v1
 kind: Service

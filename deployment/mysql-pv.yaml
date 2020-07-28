@@ -1,23 +1,23 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mysql-volume
+  name: mysql-volume-aditya
   namespace: aditya
   labels:
     type: local
 spec:
   storageClassName: aditya-mysql
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/data"
+    path: "/mnt/data-aditya"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-volume-claim
+  name: mysql-volume-claim-aditya
   namespace: aditya
 spec:
   storageClassName: aditya-mysql
@@ -25,4 +25,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi

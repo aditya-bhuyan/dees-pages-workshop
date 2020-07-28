@@ -21,8 +21,7 @@ spec:
     spec:
       volumes:
       - name: log-volume
-        persistentVolumeClaim:
-          claimName: log-persistent-claim
+        emptyDir: {}
       containers:
       - image: adityapratapbhuyan/pages:persist
         imagePullPolicy: Always
@@ -41,11 +40,15 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 150
+          periodSeconds: 5
+          successThreshold: 2
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 150
+          periodSeconds: 5
+          successThreshold: 1
         resources: {}
 status: {}

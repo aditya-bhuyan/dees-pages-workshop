@@ -19,12 +19,9 @@ public class MySqlPageRepositoryTest {
     @Autowired
     MySqlPageRepositoryTest(){
         MysqlDataSource dataSource = new MysqlDataSource();
-        String data = System.getenv("SPRING_DATASOURCE_URL");
-        dataSource.setUrl(data);
-        data = System.getenv("SPRING_DATASOURCE_USERNAME");
-        dataSource.setUser(data);
-        data = System.getenv("SPRING_DATASOURCE_PASSWORD");
-        dataSource.setPassword(data);
+        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
+        dataSource.setUser(System.getenv("SPRING_DATASOURCE_USERNAME"));
+        dataSource.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
         repo = new MySqlPageRepository(dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
     }

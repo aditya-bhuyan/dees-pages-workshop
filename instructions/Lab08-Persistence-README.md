@@ -129,7 +129,7 @@ public class MySqlPageRepository implements IPageRepository {
 - Make change in PageApplication class to return MySqlPageRepository instance instead of InMemoryPageRepository instance. This method would also take a DataSource instance as argument.
 ```java
 @Bean
-	public IPageRepository iPageRepository(DataSource dataSource){
+public IPageRepository iPageRepository(DataSource dataSource){
 		return new MySqlPageRepository(dataSource);
 	}
 ```
@@ -149,7 +149,7 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/data"
+    path: "/mnt/data-<your-name>"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -162,7 +162,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ```
 - Create a new file called mysql-secret.yaml in deployment folder
 ```yaml
@@ -208,7 +208,7 @@ spec:
               name: mysql
           volumeMounts:
             - name: mysql-storage
-              mountPath: "/var/lib/mysql"
+              mountPath: "/var/lib/mysql-<your-name>"
       volumes:
         - name: mysql-storage
           persistentVolumeClaim:
@@ -229,6 +229,7 @@ spec:
 #sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   #sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
 ```
+- Replace all the \<your-name> with your actual first name.
 - Ensure that a MySQL instance with no password for user root is running in local machine
 - Build, Test and Run the application locally by using the following commands
 ```shell script
@@ -236,7 +237,7 @@ spec:
 ./gradlew build
 ./gradlew bootRun
 ```
-- Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the following values in the application.properties in src/main folder
+- Stop the application. As we have to now prepare the application to be used in kubernetes cluster replace the values of following attributes in the application.properties in src/main folder
 ```properties
 spring.datasource.url=jdbc:mysql://mysql/pages?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&user=root
 spring.datasource.password=password
@@ -251,13 +252,15 @@ spring.datasource.password=password
 ./gradlew clean
 ./gradlew build  
 ```
-- Docker build and publish the image with tag **persist**
-- Make change in the pages-deployment.yaml and pipeline.yaml to update the tag
+- Make change in the pages-deployment.yaml and pipeline.yaml to update the tag as **persist**
+- Add the below content in pipeline.yaml just above the line "- name: Build with Gradle"
+```yaml
+- name: Start Ubuntu MySQL
+  run: sudo systemctl start mysql.service
+```
 - Change the pipeline.yaml to use the new mysql related yaml files. The last section should look like below
 ```yaml
 kubectl apply -f deployment/pages-namespace.yaml
-kubectl apply -f deployment/log-pv.yaml
-kubectl apply -f deployment/log-pvc.yaml
 kubectl apply -f deployment/mysql-pv.yaml
 kubectl apply -f deployment/mysql-secret.yaml
 kubectl apply -f deployment/mysql-deployment.yaml
