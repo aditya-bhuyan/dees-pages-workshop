@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: pages
+  name: pages
+  namespace: demo
+spec:
+  volumes:
+  - name: log-volume
+    emptyDir: {}
+  containers:
+  - image: adityapratapbhuyan/kube-pages-app:basic
+    name: pages
+    volumeMounts:
+      - name: log-volume
+        mountPath: "/var/tmp/"
+    env:
+    - name: spring.jpa.hibernate.ddl-auto
+      value: "update"
+    - name: management.endpoint.health.show-details
+      value: "always"
+    - name: management.endpoints.web.exposure.include
+      value: "*"
+    - name: logging.file.name
+      value: "/var/tmp/kube-pages-workshop-${HOSTNAME}.log"
+    ports:
+    - containerPort: 8080
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
