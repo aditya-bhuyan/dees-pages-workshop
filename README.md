@@ -154,3 +154,32 @@ rootProject.name = 'pages'
 git add .
 git commit -m "MESSAGE"
 ```
+- For the current monolith app there are 8 labs. The lab could be started by checking out a tag. The tag name would be [lab-name]-start. For each lab there would be a file containing instructions to carry out  under *instructions* directory. The instruction file will has naming convention as *Lab[number]-[Lab Description]-README.md*. For example for docker lab which is lab number 2 the instruction file name would be instructions/*Lab02-Docker-README.md*. The instruction file would be added to the local repository once we check out the tag.
+For each lab we have to checkout the tag into a new branch. The branch name would be [tag-name-minus-start]-work. For example for  tag *docker-start* branch-name would be **docker-work**. The tags needs to be checked out in following sequence.
+
+ - *hello-start*  
+ - *docker-start*
+ - *kuberetes-demo*  : **Could be skipped**
+ - *kubernetes-start*
+ - *config-start*
+ - *pipeline-start*
+ - *log-start*
+ - *inmemory-start*
+ - *persistence-start*
+For example if we have to check out *docker-start* tag we need to use the below command.
+```sh
+git checkout docker-start -b docker-work
+```
+This checkout would pick  a new file instructions/*Lab02-Docker-README.md* which contains instructions for the lab. Once the lab is completed we need to commit and push the code using below command.
+```sh
+git add .
+git commit -m "MESSAGE"
+git push origin docker-start:master -f
+```
+The same needs to be repeated for each lab. Now to start with checkout **hello-start" tag so that you get instructions/Lab01-Hello-README.md file. The command to checkout the tag into the branch would be as below.
+```sh
+git checkout hello-start -b hello-work
+```
+
+
+
