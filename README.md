@@ -159,7 +159,7 @@ For each lab we have to checkout the tag into a new branch. The branch name woul
 
   - *hello-start* 
   - *docker-start*
-  - *kuberetes-demo* 
+  - *kubernetes-demo* 
   - *kubernetes-start*
   - *config-start*
   - *pipeline-start*
