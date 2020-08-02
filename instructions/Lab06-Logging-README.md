@@ -146,7 +146,16 @@ kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
 - Change the value of **tags** in *pipeline.yaml* to *logging* 
-- Push the code to github repository to start the pipeline
+- Use the below commands push the code to github repository to start the pipeline
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin log-work:master
+```
 - In PKS cluster the application ready time would be delayed. The application would be ready after 150 seconds as the readiness probe would start after 150 seconds.
 - Keep on checking the status of the pod which is part of the pages deployment
 - After sometime though the status of the pod might be **Running**, but it might be showing **Not Ready** as it needs atleast 150 seconds to be ready.
+- Execute the below command to checkout the required tag for next lab
+```shell script
+git checkout inmemory-start -b inmemory-work
+```
