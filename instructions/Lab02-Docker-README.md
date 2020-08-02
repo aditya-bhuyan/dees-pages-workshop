@@ -24,4 +24,13 @@ Then open the application in browser @ http://localhost:8080 to test it.
 ```shell script
 docker push <docker_username>/pages:<tag>
 ```
-
+- Use the below commands to push code to remote repository
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin docker-work:master -f
+```
+- Checkout the next tag to work on the next lab
+```shell script
+git checkout kubernetes-demo -b kubernetes-demo-work
+```

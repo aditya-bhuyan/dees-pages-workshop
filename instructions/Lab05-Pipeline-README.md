@@ -95,5 +95,14 @@ jobs:
 ```
 - Replace the **tag-name** and **docker-user-name** with proper *tag-name* and your own docker *user name*.
 
-- Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster
+- Push your code to git repository and wait till git actions starts the build and deploys to PKS cluster. Use the below commands to push your code to repository.
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin pipeline-work:master
+```
 - Verify your objects created in pks cluster and access the service in browser as per the commands mentioned in the previous lab
+- Use the below command to checkout required tag for next lab
+```shell script
+git checkout log-start -b log-work
+```
