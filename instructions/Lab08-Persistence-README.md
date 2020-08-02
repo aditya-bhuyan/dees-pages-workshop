@@ -269,7 +269,12 @@ kubectl apply -f deployment/pages-service.yaml
 kubectl delete -f deployment/pages-deployment.yaml
 kubectl apply -f deployment/pages-deployment.yaml
 ```
-- Finally push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
+- Use the below commands to push the code to the github so that github actions will start the pipeline and the application would be deployed in cluster.
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin persistence-work:master
+```
 - Use the below command to set default namespace
 ```shell script
 kubectl config set-context --current --namespace=<your-name>
