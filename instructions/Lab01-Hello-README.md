@@ -60,9 +60,13 @@ management.endpoint.health.show-details=always
 ./gradlew bootRun
 ```
 - Open the application @ http://localhost:8080 in the browser to test the application. Check the actuator end points @ http://localhost:8080/actuator
-- Push code to github repository by using following command
+- Push code to github repository by using following commands
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin master
+git push origin hello-work:master -f
+```
+- To work on the next lab execute the below command
+```shell script
+git checkout docker-start -b docker-work
 ```
