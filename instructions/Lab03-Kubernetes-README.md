@@ -66,4 +66,13 @@ kubectl config set-context --current --namespace=<your-name>
 - Identify the external ip of the **pages** service from the output of "kubectl get service pages" command.
 - Open the pages url in http://external-ip:8080 to test the application
 
-- Push your code to github
+- Push your code to github using below commands
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin kubernetes-work:master -f
+```
+- Execute the below command to checkout the required git tag for next lab
+```shell script
+git checkout config-start -b config-work
+```
