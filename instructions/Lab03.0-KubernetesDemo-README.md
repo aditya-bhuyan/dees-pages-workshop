@@ -1,7 +1,13 @@
 # Follow Instructions to demonstrate the use of Deployment, ReplicaSet and Pod
 
 ## Demonstration
-- Start minikube 
+- Create a folder called *logs* under */usr* using below command
+```shell script
+sudo mkdir -p /usr/logs
+sudo chmod -R 777 /usr/logs
+sudo chown -R -$USER /usr/logs
+```
+- Start minikube in VM using the below command. Use the argument **driver** only if minikube fails to start without it.The value for argument **driver** could be docker/virtualbox. 
 ```shell script
 minikube start --mount=true --mount-string=/usr/logs:/usr/logs --driver=docker/virtualbox
 ```
@@ -33,14 +39,45 @@ kubectl get po pages
 kubectl delete po pages-<some-name>-<some-name>
 kubectl get po
 ```
-You will find that the old pod is terminated or terminating and a new pod is getting created. This is because the deployment is always maintaining two pod.
+You will find that the old pod is terminated or terminating stage and a new pod is getting created/already created. This is because the deployment is always maintaining two pod.
 Now delete the orphan pod called pages using the below command and check the status.
 ```shell script
 kubectl delete po pages
 kubectl get po
 ```
-You would find that the pod pages is deleted but no new pod is coming up. It is beacuse it is an orphan pod is not maintained by the deployment.
-Delete everything by using the below command.
+You would find that the standalone pod **pages** is deleted but no new pod is coming up. It is beacuse it is an orphan pod is not maintained by the deployment.
+- Check the log files of the application created in "/usr/logs" using below command
 ```shell script
+ls -l /usr/logs
+```
+Verify from the output that 2 log files had been created.
+- Create a NodePort service using the below command.
+```shell script
+kubectl apply -f demo-pages-service.yaml
+```
+This would create a NodePort service called **pages**. Verify the service creation using below command.
+```shell script
+kubectl get service pages
+```
+- Execute the below command to open the application url in browser
+```shell script
+minikube service pages -n <your-name>
+```
+This command will open the application url in browser. Through the swagger documentation execute the REST APIs.
+- Delete everything by using the below commands.
+```shell script
+kubectl delete pvc log-persistent-claim
 kubectl delete -f deployment/demo-pages-deploy-vol.yaml
+kubectl delete service pages
+kubectl delete ns <your-name>
+```
+- Execute the below commands to push your code to remote github repository.
+```shell script
+git add .
+git commit -m "commit_message"
+git push origin kubernetes-demo-work:master -f
+```
+- The below command will checkout the required tag for next lab
+```shell script
+git checkout kubernetes-start -b kubernetes-work
 ```
