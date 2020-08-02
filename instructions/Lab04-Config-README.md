@@ -100,4 +100,13 @@ kubectl get service pages  --namespace pages-<your-name>
 ```
 - Identify the url of the **pages** service from the output above command. Refer to the previous lab for instructions to know the url of the service for both minikube and pks
 - Open the pages url in browser to test the application.  
-- Push the code to github repository
+- Push the code to github repository using below commands
+```shell script
+git add .
+git commit -m "MESSAGE"
+git push origin config-work:master
+```
+- Use the below command to checkout the required tag for next lab
+```shell script
+git checkout pipeline-start -n pipeline-work
+```
