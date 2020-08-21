@@ -42,14 +42,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+
 
 ### IntelliJ IDEA ###
 .idea
@@ -58,15 +51,6 @@ build/
 *.ipr
 out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
-.vscode/
 ```
 - Open the project in Intellij Idea, select the import gradle project option in bottom right corner and  set project SDK to JDK 11
 - Create two folders **src/main/java** and **src/test/java** under project root directory. Mark them as sources root and test root respectively.
@@ -154,35 +138,36 @@ rootProject.name = 'pages'
 git add .
 git commit -m "MESSAGE"
 ```
-- For the current monolith app there are 8 labs. The lab could be started by checking out a tag. All the tag names are provided in sequence. The tag name would be [lab-name]-start. For each lab there would be a file containing instructions to carry out  under *instructions* directory. The instruction files follow a naming convention as *Lab[number]-[Lab Description]-README.md*. For example for docker lab which is lab number 2 the instruction file name would be instructions/*Lab02-Docker-README.md*. The instruction file would be added to the local repository once we check out the tag.
-For each lab we have to checkout the tag into a new branch. The branch name would be [tag-name-minus-start]-work. For example for  tag *docker-start* branch-name would be **docker-work**. The tags needs to be checked out as per the sequence mentioned in the below table.
-    | SL No  | Lab Name                      |Git Tag Name        | Instruction File Name           | Branch             |Comment                     |
-    |--------|-------------------------------|--------------------|---------------------------------|--------------------|----------------------------|
-    | 1      | Hello                         |*hello-start*       |Lab01-Hello-README.md            |hello-work          |Initial App                 |
-    | 2      | Docker                        |*docker-start*      |Lab02-Docker-README.md           |docker-work         |Docker                      |
-	| 3.0    | Kubernetes Presentation       |*kubernetes-demo*   |Lab03.0-KubernetesDemo-README.md |kubernetes-demo-work|Demo of Kubernetes Objects  |
-	| 3      | Kubernetes                    |*kubernetes-start*  |Lab03-Kubernetes-README.md       |kubernetes-work     |Kubernetes Deployments      |
-	| 4      | Externalizing Configuration   |*config-start*      |Lab04-Config-README.md           |config-work         |Using Configuration         |
-	| 5      | Pipeline                      |*pipeline-start*    |Lab05-Pipeline-README.md         |pipeline-work       |Using Github Actions        |
-	| 6      | Logging and Probing           |*log-start*         |Lab06-Logging-README.md          |log-work            |Logging and Probing in k8s  |
-	| 7      | Inmemory Persistence          |*inmemory-start*    |Lab07-Inmemory-README.md         |inmemory-work       |Inememory Repository        |
-	| 8      | MySQL Persistence             |*persistence-start* |Lab08-Persistence-README.md      |persistence-work    |MySQL Repository            |
+- For the current monolith app there are 8 labs. The lab could be started by cherry-pick a tag. All the tag names are provided in sequence. The tag name would be [lab-name]-start. For each lab there would be a file containing instructions to carry out  under *instructions* directory. The instruction files follow a naming convention as *Lab[number]-[Lab Description]-README.md*. For example for docker lab which is lab number 2 the instruction file name would be instructions/*Lab02-Docker-README.md*. The instruction file would be added to the local repository once we cherry-pick the tag.
+For each lab we have to cherry-pick the tag into master branch.  The tags needs to be cherry-pick as per the sequence mentioned in the below table.
+
+    | SL No  | Lab Name                      |Git Tag Name        | Instruction File Name           | Comment                     |
+    |--------|-------------------------------|--------------------|---------------------------------|----------------------------|
+    | 1      | Hello                         |*hello-start*       |Lab01-Hello-README.md            |Initial App                 |
+    | 2      | Docker                        |*docker-start*      |Lab02-Docker-README.md           |Docker                      |
+	| 3.0    | Kubernetes Presentation       |*kubernetes-demo*   |Lab03.0-KubernetesDemo-README.md |Demo of Kubernetes Objects  |
+	| 3      | Kubernetes                    |*kubernetes-start*  |Lab03-Kubernetes-README.md       |Kubernetes Deployments      |
+	| 4      | Externalizing Configuration   |*config-start*      |Lab04-Config-README.md           |Using Configuration         |
+	| 5      | Pipeline                      |*pipeline-start*    |Lab05-Pipeline-README.md         |Using Github Actions        |
+	| 6      | Logging and Probing           |*log-start*         |Lab06-Logging-README.md          |Logging and Probing in k8s  |
+	| 7      | Inmemory Persistence          |*inmemory-start*    |Lab07-Inmemory-README.md         |Inememory Repository        |
+	| 8      | MySQL Persistence             |*persistence-start* |Lab08-Persistence-README.md      |MySQL Repository            |
   
 For example if we have to check out *docker-start* tag we need to use the below command.
 ```sh
-git checkout docker-start -b docker-work
+git cherry-pick docker-start
 ```
-This checkout would pick  a new file instructions/*Lab02-Docker-README.md* which contains instructions for the lab **Hello**. We need to implement the instructions mentioned in the file. Once the lab is completed we need to commit and push the code using below command.
+This cherry-pick would pick  a new file instructions/*Lab02-Docker-README.md* which contains instructions for the lab **Hello**. We need to implement the instructions mentioned in the file. Once the lab is completed we need to commit and push the code using below command.
 ```sh
 git add .
 git commit -m "MESSAGE"
-git push origin docker-work:master -f
+git push origin master 
 ```
 The same needs to be repeated for each lab. 
 
-- Now to start with, checkout **hello-start** tag so that you will get instructions/Lab01-Hello-README.md file. The command to checkout the tag into the branch would be as below.
+- Now to start with, cherry-pick **hello-start** tag so that you will get instructions/Lab01-Hello-README.md file. The command to cherry-pick the tag into the branch would be as below.
 ```sh
-git checkout hello-start -b hello-work
+git cherry-pick hello-start 
 ```
 
 
