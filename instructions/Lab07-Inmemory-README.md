@@ -189,10 +189,10 @@ public class PageController {
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin inmemory-work:master
+git push origin master
 ```
 - Verify the deployments in PKS Cluster and test the application by opening it in browser as per instructions given in previous labs
 - Use the below command to checkout required tag for next lab
 ```shell script
-git checkout persistence-start -b persistence-work
+git cherry-pick persistence-start 
 ```
