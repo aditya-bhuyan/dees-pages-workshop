@@ -104,9 +104,9 @@ kubectl get service pages  --namespace pages-<your-name>
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin config-work:master
+git push origin master
 ```
 - Use the below command to checkout the required tag for next lab
 ```shell script
-git checkout pipeline-start -n pipeline-work
+git cherry-pick pipeline-start
 ```
