@@ -14,7 +14,9 @@
 1. Create an account using the link https://account.run.pivotal.io/z/uaa/sign-up if pivotal account is not there already
 2. Check your inbox and verify email, so that you can sign in successfully.
 3. Access https://network.pivotal.io/users/dashboard/edit-profile
-4. Create an API token and copy it and assign it to PKS_TOKEN
+4. Create an API token and store the token in some file permamnently
+5. Assign the token to PKS_TOKEN secret
+6. Open "https://network.pivotal.io/products/208/releases/613165/eulas/168" on browser and accept the license agreement
 ```
 - Create the following directory .github/workflows and create a file called pipeline.yaml under it with below content
 ```yaml
@@ -99,10 +101,10 @@ jobs:
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin pipeline-work:master
+git push origin master
 ```
 - Verify your objects created in pks cluster and access the service in browser as per the commands mentioned in the previous lab
 - Use the below command to checkout required tag for next lab
 ```shell script
-git checkout log-start -b log-work
+git cherry-pick log-start 
 ```

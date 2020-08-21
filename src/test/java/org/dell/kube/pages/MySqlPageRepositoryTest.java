@@ -4,7 +4,6 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -13,20 +12,13 @@ import java.util.TimeZone;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 public class MySqlPageRepositoryTest {
-    private final MySqlPageRepository repo;
-    private final JdbcTemplate jdbcTemplate;
-    @Autowired
-    MySqlPageRepositoryTest(){
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
-        dataSource.setUser(System.getenv("SPRING_DATASOURCE_USERNAME"));
-        dataSource.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
-        repo = new MySqlPageRepository(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
-    }
+    private IPageRepository repo;
+    private JdbcTemplate jdbcTemplate;
+
     @Before
-    public void init(){
+    private void init(){
         jdbcTemplate.execute("create table if not exists pages(\n" +
                 "  id bigint(20) not null auto_increment,\n" +
                 "  business_name VARCHAR(50),\n" +
@@ -41,11 +33,15 @@ public class MySqlPageRepositoryTest {
     }
     @BeforeEach
     public void setUp() {
-
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
+        dataSource.setUser(System.getenv("SPRING_DATASOURCE_USERNAME"));
+        dataSource.setPassword(System.getenv("SPRING_DATASOURCE_PASSWORD"));
+        repo = new MySqlPageRepository(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DELETE FROM pages");
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
-
 
     @Test
     public void createInsertsAPageRecord() {

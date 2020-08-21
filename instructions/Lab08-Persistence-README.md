@@ -131,7 +131,7 @@ public class MySqlPageRepository implements IPageRepository {
 @Bean
 public IPageRepository iPageRepository(DataSource dataSource){
 		return new MySqlPageRepository(dataSource);
-	}
+}
 ```
 - Add new deployment file  mysql-pv.yaml to be used by the new mysql deployment  volume in kubernetes cluster under  deployment folder
 ```yaml
@@ -231,6 +231,7 @@ spec:
 ```
 - Replace all the \<your-name> with your actual first name.
 - Ensure that a MySQL instance with no password for user root is running in local machine
+- Open MySQLRepositoryTest.java and comment out line number 38 and 39 for pass local testing.
 - Build, Test and Run the application locally by using the following commands
 ```shell script
 ./gradlew clean
@@ -247,10 +248,11 @@ spring.datasource.password=password
 "SPRING_DATASOURCE_USERNAME": "root",
 "SPRING_DATASOURCE_PASSWORD": "root",
 ```
+- Open MySQLRepositoryTest.java and uncomment  line number 38 and 39 for pass local testing.
 - Build the application by using the following command
 ```shell script
 ./gradlew clean
-./gradlew build  
+./gradlew build  -x test
 ```
 - Make change in the pages-deployment.yaml and pipeline.yaml to update the tag as **persist**
 - Add the below content in pipeline.yaml just above the line "- name: Build with Gradle"
@@ -273,7 +275,7 @@ kubectl apply -f deployment/pages-deployment.yaml
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin persistence-work:master
+git push origin master
 ```
 - Use the below command to set default namespace
 ```shell script
