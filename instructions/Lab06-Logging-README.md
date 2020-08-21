@@ -117,14 +117,14 @@ spec:
         readinessProbe:
           tcpSocket:
            port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
           periodSeconds: 5
           successThreshold: 2
         livenessProbe:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 150
+          initialDelaySeconds: 15
           periodSeconds: 5
           successThreshold: 1
         resources: {}
@@ -150,12 +150,12 @@ kubectl apply -f deployment/pages-deployment.yaml
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin log-work:master
+git push origin master
 ```
 - In PKS cluster the application ready time would be delayed. The application would be ready after 150 seconds as the readiness probe would start after 150 seconds.
 - Keep on checking the status of the pod which is part of the pages deployment
 - After sometime though the status of the pod might be **Running**, but it might be showing **Not Ready** as it needs atleast 150 seconds to be ready.
 - Execute the below command to checkout the required tag for next lab
 ```shell script
-git checkout inmemory-start -b inmemory-work
+git cherry-pick inmemory-start 
 ```

@@ -64,9 +64,9 @@ management.endpoint.health.show-details=always
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin hello-work:master -f
+git push origin master
 ```
 - To work on the next lab execute the below command
 ```shell script
-git checkout docker-start -b docker-work
+git cherry-pick docker-start 
 ```
