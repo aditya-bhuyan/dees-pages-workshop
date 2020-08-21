@@ -70,9 +70,9 @@ kubectl config set-context --current --namespace=<your-name>
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin kubernetes-work:master -f
+git push origin master
 ```
 - Execute the below command to checkout the required git tag for next lab
 ```shell script
-git checkout config-start -b config-work
+git cherry-pick config-start 
 ```
