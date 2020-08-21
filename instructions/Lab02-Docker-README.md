@@ -28,9 +28,9 @@ docker push <docker_username>/pages:<tag>
 ```shell script
 git add .
 git commit -m "MESSAGE"
-git push origin docker-work:master -f
+git push origin master 
 ```
 - Checkout the next tag to work on the next lab
 ```shell script
-git checkout kubernetes-demo -b kubernetes-demo-work
+git cherry-pick kubernetes-demo 
 ```
