@@ -75,9 +75,9 @@ kubectl delete ns <your-name>
 ```shell script
 git add .
 git commit -m "commit_message"
-git push origin kubernetes-demo-work:master -f
+git push origin master 
 ```
 - The below command will checkout the required tag for next lab
 ```shell script
-git checkout kubernetes-start -b kubernetes-work
+git cherry-pick kubernetes-start 
 ```
